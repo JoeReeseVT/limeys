@@ -2,28 +2,31 @@
 #include "Arduino.h"
 #include <math.h>
 
-/* Allocate space for the data members */
+
+/* Allocate the actual space for the data members */
 const int     botUI::N_COLORS;
 constexpr int botUI::PINS[N_COLORS];
 mode_t        botUI::modes[N_COLORS];
 unsigned long botUI::periods[N_COLORS];
-int           botUI::duties[N_COLORS];
 unsigned long botUI::timers[N_COLORS];
-int           botUI::numFlashes[N_COLORS];
 unsigned long botUI::waits[N_COLORS];
+int           botUI::numFlashes[N_COLORS];
+int           botUI::duties[N_COLORS];
 
 
 botUI::botUI() {
 	for (int i = 0; i < N_COLORS; i++) {
 		pinMode(PINS[i], OUTPUT);
-    modes[i]   = STOP;
-    duties[i]  = 1000;
-    timers[i]  = 0;
+    modes[i]      = STOP;
+    duties[i]     = 1000;
+    timers[i]     = 0;
+    waits[i]      = 1000;
+    numFlashes[i] = 1;
 	}
 }
 
 
-/* Reset the pins to high-Z just in case */
+/* Reset the pins to high-Z just in case this is run for some reasion*/
 botUI::~botUI() {
 	for (int i = 0; i < N_COLORS; i++)
 		pinMode(PINS[i], INPUT);
@@ -59,11 +62,6 @@ void botUI::ledLoop() {
 
 	for (int i = 0; i < N_COLORS; i++) {
 		switch (modes[i]) {
-
-      case SOLID: {
-        duties[i] = PWM_MAX;
-        break;
-      }
       
 			/* Turn the LED on for half the peiod, off for the next half */
 			case BLINK: {
@@ -95,6 +93,11 @@ void botUI::ledLoop() {
 				duties[i] = PWM_MAX * sin(fmod(millis(), periods[i]) * PI / (double)periods[i]);
 				break;
 			}
+
+      case SOLID: {
+        duties[i] = PWM_MAX;
+        break;
+      }
 
 			case STOP: {
 				duties[i] = 0;	

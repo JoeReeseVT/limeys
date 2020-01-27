@@ -2,8 +2,8 @@
 
 
 // Pin declarations
-const uint8_t SWCH0  = 6; // switch port
-const uint8_t BTN[3] = {7, 8, 9}; // array of button ports
+const int SWCH0  = 6; // switch port
+const int BTN[3] = {7, 8, 9}; // array of button ports
 
 
 // For diagnostic mode
@@ -47,7 +47,6 @@ void stateMachine() {
       }
       break;
     
-    // standby state blinking red led
     // can move to run, sleep, or off state
     case STBY: 
       if (not digitalRead(SWCH0)) {
@@ -74,7 +73,7 @@ void stateMachine() {
         ledSlp();
       } else if (not digitalRead(BTN[2])) {
         state = DIAG;
-        //ledDiag(numProbs);
+        ledDiag(numProbs);
       } else
         ledRun();
       break;
@@ -124,38 +123,6 @@ void ledSlp() {
 
 
 void ledDiag(int numProbs) {
+  myBotUI.allStop();
   myBotUI.setMode(ORN, FLASH, 300, numProbs, 1000);
 }
-
-/*
-// blinks led for "numProbs" number of times
-// then turns off for a period of time
-// then repeats
-void ledDiag(int numProbs) {
-  const unsigned long FLASH_PERIOD = 300;
-  const unsigned long ON_TIME = numProbs * FLASH_PERIOD;
-  
-  myBotUI.allStop();
-
-  
-  myBotUI.setMode(ORN, BLINK, FLASH_PERIOD);
-  
-
-  
-  // toggles if led is off or blinking
-  if (millis() - timer[0] >= SOLID) {
-    timer[0] = millis();
-    isOff = not isOff;
-  }
-  
-  if (not isOff) {
-    // toggles led in blink mode
-    if (millis() - timer[1] >= BLINK) {
-      timer[1] = millis();
-      isOn = not isOn;
-    }
-    analogWrite(ORNGLED, 127 * isOn); // 50% duty cycle
-  } else
-    analogWrite(ORNGLED, 0); // off when not blinking
-}
-*/

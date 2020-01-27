@@ -4,10 +4,10 @@
 #include <Arduino.h>
 
 enum mode_t {
-  SOLID,
 	BLINK,
 	FLASH,
 	PULSE,
+  SOLID,
 	STOP
 };
 
@@ -25,11 +25,11 @@ class botUI {
 		~botUI();
 		
 	  static void ledLoop();	
-		static bool getInput(int pin);
     static void setMode(color_t color, mode_t mode, unsigned long period = 0, int numFlash = 0, unsigned long wait = 0);
     static void allStop();
 
     //TODO: functions for get input
+    static bool getInput(int pin);
 
 	private:
   
@@ -42,10 +42,11 @@ class botUI {
    
 		static mode_t        modes[N_COLORS];
 		static unsigned long periods[N_COLORS];
-		static int           duties[N_COLORS];
 		static unsigned long timers[N_COLORS];
-    static int           numFlashes[N_COLORS];
     static unsigned long waits[N_COLORS];
+    static int           numFlashes[N_COLORS];
+    static int           duties[N_COLORS];
+
 };
 
 #endif
