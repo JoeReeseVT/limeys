@@ -39,10 +39,10 @@ class motorControl {
  	  unsigned long accelTimer;
   	int PINS[2];
     
+    spin_t curSpin;
   	int    tgtPwms[2];
   	int    curPwms[2];
     int    deltas[2];
-  	spin_t curSpin;
 };
 
 #endif
