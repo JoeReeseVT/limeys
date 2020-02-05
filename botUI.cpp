@@ -4,33 +4,34 @@
 
 
 botUI::botUI(const int PIN_ARR[], const int LENGTH) {
-  N_COLORS = LENGTH;
+	N_COLORS = LENGTH;
 	for (int i = 0; i < N_COLORS; i++) {
-    PINS[i] = PIN_ARR[i];
+		PINS[i] = PIN_ARR[i];
 		pinMode(PINS[i], OUTPUT);
-    modes[i]      = STOP;
-    duties[i]     = 1000;
-    timers[i]     = 0;
-    waits[i]      = 1000;
-    numFlashes[i] = 1;
+		modes[i]      = STOP;
+		duties[i]     = 1000;
+		timers[i]     = 0;
+		waits[i]      = 1000;
+		numFlashes[i] = 1;
 	}
 }
 
 
 void botUI::allStop() {
-  for (int i = 0; i < N_COLORS; i++)
-    setMode((color_t)i, STOP);
+	for (int i = 0; i < N_COLORS; i++)
+		setMode((color_t)i, STOP);
 }
 
 
-void botUI::setMode(color_t color, mode_t mode, unsigned long period, int numFlash, unsigned long wait) {
-  modes[color] = mode;
-  if (period)
-    periods[color] = period;
-  if (numFlash)
-    numFlashes[color] = numFlash;
-  if (wait)
-    waits[color] = wait;
+void botUI::setMode(color_t color, mode_t mode, 
+                unsigned long period, int numFlash, unsigned long wait) {
+	modes[color] = mode;
+	if (period)
+		periods[color] = period;
+	if (numFlash)
+		numFlashes[color] = numFlash;
+	if (wait)
+		waits[color] = wait;
 }
 
 
@@ -74,12 +75,13 @@ void botUI::loop() {
 
 			/* "Breathe" by half the cycle of sin(x * 2pi / (period * 2)) */
 			case PULSE:
-				duties[i] = PWM_MAX * sin(fmod(millis(), periods[i]) * PI / (double)periods[i]);
+				duties[i] = PWM_MAX * sin(fmod(millis(), periods[i]) 
+				                    * PI / (double)periods[i]);
 				break;
 
-      case SOLID:
-        duties[i] = PWM_MAX;
-        break;
+			case SOLID:
+				duties[i] = PWM_MAX;
+				break;
 
 			case STOP:
 				duties[i] = 0;	

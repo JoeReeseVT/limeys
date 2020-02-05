@@ -8,11 +8,11 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 motorControl::motorControl(const int PINS_ARR[2]) {
 
-  for (int i = FWD; i <= REV; i++) {
-    PINS[i] = PINS_ARR[i];
-    pinMode(PINS[i], OUTPUT);
-  }
-  setVelocity(0, FWD);
+	for (int i = FWD; i <= REV; i++) {
+		PINS[i] = PINS_ARR[i];
+		pinMode(PINS[i], OUTPUT);
+	}
+	setVelocity(0, FWD);
 }
 
 
@@ -21,14 +21,14 @@ motorControl::motorControl(const int PINS_ARR[2]) {
  * and update the deltas 
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void motorControl::setVelocity(int spd, spin_t spin) {
-  if (spin != curSpin or spd != tgtPwms[FWD] and spd != tgtPwms[REV]) {
-  	accelTimer = millis();
-   	for (int i = FWD; i <= REV; i++)
-      deltas[i] = curPwms[i] - tgtPwms[i];
-  }
-    
-  tgtPwms[FWD] = spd * (int)(not curSpin); 
-  tgtPwms[REV] = spd * (int)(curSpin);
+	if (spin != curSpin or spd != tgtPwms[FWD] and spd != tgtPwms[REV]) {
+		accelTimer = millis();
+		for (int i = FWD; i <= REV; i++)
+			deltas[i] = curPwms[i] - tgtPwms[i];
+	}
+	
+	tgtPwms[FWD] = spd * (int)(not curSpin); 
+	tgtPwms[REV] = spd * (int)(curSpin);
 }
 
 
@@ -38,8 +38,8 @@ void motorControl::setVelocity(int spd, spin_t spin) {
  * Everything in between is handled appropriately.
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void motorControl::loop() {
-  static unsigned long deltaT;
-  deltaT = millis() - accelTimer;
+	static unsigned long deltaT;
+	deltaT = millis() - accelTimer;
 
   /*
   if (deltaT <= RAMP_TIME) 
@@ -48,6 +48,6 @@ void motorControl::loop() {
                    * (cos(deltaT * PI / RAMP_TIME) + 1);
   */
 
-  analogWrite(PINS[FWD], tgtPwms[FWD]);
-  analogWrite(PINS[REV], tgtPwms[REV]);
+	analogWrite(PINS[FWD], tgtPwms[FWD]);
+	analogWrite(PINS[REV], tgtPwms[REV]);
 }

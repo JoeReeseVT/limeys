@@ -14,7 +14,7 @@ enum mode_t {
 	BLINK,
 	FLASH,
 	PULSE,
-  SOLID,
+	SOLID,
 	STOP
 };
 
@@ -52,16 +52,16 @@ class botUI {
 		mode_t        modes[];
 		unsigned long periods[];
 		unsigned long timers[];
-    unsigned long waits[];
-    int           numFlashes[];
-    int           duties[];
+		unsigned long waits[];
+		int           numFlashes[];
+		int           duties[];
 
-  public:
-    botUI(const int PINS_ARRAY[], const int LENGTH); // Sets pin modes and initializes all colors to STOP
-    
-    void loop(); 
-    void setMode(color_t color, mode_t mode, unsigned long period = 0, int numFlash = 0, unsigned long wait = 0);
-    void allStop();
+	public:
+		botUI(const int PINS_ARRAY[], const int LENGTH); // Sets pin modes and initializes all colors to STOP
+		
+		void loop(); 
+		void setMode(color_t color, mode_t mode, unsigned long period = 0, int numFlash = 0, unsigned long wait = 0);
+		void allStop();
 
     //TODO: functions for get input
     //static bool getInput(int pin);

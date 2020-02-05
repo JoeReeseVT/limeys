@@ -29,20 +29,20 @@ enum spin_t {
  *   curSpin : Are we currently trying to go forward or backward?
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 class motorControl {
-  public:
-  	motorControl(const int PINS_ARR[2]);
-    void loop();
-  	void setVelocity(int spd, spin_t spin);
+	public:
+		motorControl(const int PINS_ARR[2]);
+		void loop();
+		void setVelocity(int spd, spin_t spin);
 
-  private:
-    const unsigned long RAMP_TIME  = 5; // ms to go from A to B
- 	  unsigned long accelTimer;
-  	int PINS[2];
-    
-    spin_t curSpin;
-  	int    tgtPwms[2];
-  	int    curPwms[2];
-    int    deltas[2];
+	private:
+		const unsigned long RAMP_TIME  = 5; // ms to go from A to B
+		unsigned long accelTimer;
+		int PINS[2];
+	  
+		int    tgtPwms[2];
+		int    curPwms[2];
+		int    deltas[2];
+		spin_t curSpin;
 };
 
 #endif
