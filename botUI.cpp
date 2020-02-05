@@ -55,23 +55,23 @@ void botUI::loop() {
 				}
 				break;
 
-      /* This is sorta complicated. We flash numFlashes[i] times with 
-       * the given period. Then we turn off for waits[i] ms. Then we 
-       * start over by resetting the timer.
-       * 
-       * Uses the fact that odd multiples of half the blink period 
-       * should be ON
-       * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-      case FLASH:
-        if (millis() - timers[i] >= periods[i] * numFlashes[i] + waits[i])
-          timers[i] = millis();
-        else if (millis() - timers[i] >= periods[i] * numFlashes[i])
-          duties[i] = 0;
-        else if ((((millis() - timers[i])) / (periods[i] >> 1)) % 2)
-          duties[i] = PWM_MAX;
-        else 
-          duties[i] = 0;
-        break;
+			/* This is sorta complicated. We flash numFlashes[i] times with 
+			 * the given period. Then we turn off for waits[i] ms. Then we 
+			 * start over by resetting the timer.
+			 * 
+			 * Uses the fact that odd multiples of half the blink period 
+			 * should be ON
+			 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+			case FLASH:
+				if (millis() - timers[i] >= periods[i] * numFlashes[i] + waits[i])
+					timers[i] = millis();
+				else if (millis() - timers[i] >= periods[i] * numFlashes[i])
+					duties[i] = 0;
+				else if ((((millis() - timers[i])) / (periods[i] >> 1)) % 2)
+					duties[i] = PWM_MAX;
+				else 
+					duties[i] = 0;
+				break;
 
 			/* "Breathe" by half the cycle of sin(x * 2pi / (period * 2)) */
 			case PULSE:
