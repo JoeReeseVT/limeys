@@ -24,7 +24,8 @@ void motorControl::setVelocity(int spd, spin_t spin) {
 	if (spin != curSpin or spd != tgtPwms[FWD] and spd != tgtPwms[REV]) {
 		accelTimer = millis();
 		for (int i = FWD; i <= REV; i++)
-			deltas[i] = curPwms[i] - tgtPwms[i];
+		deltas[i] = curPwms[i] - tgtPwms[i];
+		curSpin = spin;
 	}
 	
 	tgtPwms[FWD] = spd * (int)(not curSpin); 

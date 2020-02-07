@@ -8,8 +8,8 @@
  * e.g. the motor on the starboard side has clockwise being forward
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 enum spin_t {
-  FWD, 
-  REV
+	FWD, 
+	REV
 };
 
 /* motorControl class
