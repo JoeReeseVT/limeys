@@ -11,7 +11,7 @@ lightSensor::lightSensor(int sensor, int red, int blue) {
   ledPins[BLU_SENS] = blue;
   curTrack = ERR_TK; 
   duties[RED_SENS]  = 0;
-  duties[BLU_SENS]  = 255;
+  duties[BLU_SENS]  = BLU_PWM;
 }
 
 /* There is an array called int duties[2] that can hold pwm values for each pin */
@@ -23,8 +23,8 @@ void lightSensor::loop() {
   if (millis() - toglTimer >= LED_PERIOD) {
       toglTimer = millis();
       sensTimer = millis();
-      duties[RED_SENS] = 255 - duties[RED_SENS];
-      duties[BLU_SENS] = 255 - duties[BLU_SENS];
+      duties[RED_SENS] = RED_PWM - duties[RED_SENS];
+      duties[BLU_SENS] = BLU_PWM - duties[BLU_SENS];
       analogWrite(ledPins[RED_SENS], duties[RED_SENS]);
       analogWrite(ledPins[BLU_SENS], duties[BLU_SENS]);
   } else if (millis() - sensTimer >= LED_PERIOD >> 1) {

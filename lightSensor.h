@@ -27,6 +27,8 @@ class lightSensor {
     void calcDeltaV(sensor_t clr); // Find the differrence between the new voltage and old voltage
   
   private:
+    const   int RED_PWM = 127;
+    const   int BLU_PWM = 255;
     const   int RED_THRESH = -1;
     const   int BLU_THRESH = -1;
     const   unsigned long BLINK_PERIOD = 500;   // milliseconds
