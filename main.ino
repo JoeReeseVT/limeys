@@ -1,11 +1,11 @@
-#include "botUI.h"
+#include "led.h"
 #include "motorControl.h"
+#include "lightSensor.h"
 
 // Pin declarations
-const int LED_PINS[] = {7, 8, 9, 10};
 const int MTR_L_PINS[] = {4, 5};
 const int MTR_R_PINS[] = {2, 3};
-
+const int SENSOR_PIN = A0;
 const int SWCH0  = 6; // switch port
 const int BTN[3] = {7, 8, 9}; // array of button ports
 
@@ -24,12 +24,16 @@ enum state_t {
 } state = OFF; // Makes a globabl called state, init. to OFF
 
 
-botUI        myBotUI(LED_PINS, 4);
+// CLASS INSTANTIATIONS
+led          redTkLed(6, 127);
+led          bluTkLed(7, 127);
+led          ylwTkLed(8, 127);
 motorControl leftMotor(MTR_L_PINS);
 motorControl rightMotor(MTR_R_PINS);
+lightSensor  myLightSensors(SENSOR_PIN, 12, 11);
 
 
-void setup() {
+void setup() { 
 	Serial.begin(9600);
 	for (int k = 6; k <= 9; k++)
 		pinMode(k, INPUT_PULLUP); // setup pins to pull up
@@ -37,17 +41,22 @@ void setup() {
 
 
 void loop() {
-	stateMachine();
-	myBotUI.loop();
-	leftMotor.loop();
-	rightMotor.loop();
+//	stateMachine();
+//	fsmUI.loop();
+
+  ylwTkLed.loop();
+  bluTkLed.loop();
+  redTkLed.loop();
+//	leftMotor.loop();
+//	rightMotor.loop();
+  myLightSensors.loop();
+  
 	testing();
 }
 
 /* TODO: Create a motor stop public function */
 void testing() {
 	static int testNum = 0;
-
 
 	switch (testNum) {
 		/* Straight FWD */
@@ -56,13 +65,13 @@ void testing() {
 			rightMotor.setVelocity(70, FWD);
 			if (wait(1000)) {
 				Serial.println("Switching to 1");
-				leftMotor.setVelocity(0, FWD);
-				rightMotor.setVelocity(0, FWD);
+        leftMotor.halt();
+        rightMotor.halt();
 				testNum++;
 			}
 			break;
 			
-			 Straight back */
+		/* Straight back */
 		case 1:
 			if (wait(500)) {
 				Serial.println("Switching to 2");
@@ -75,8 +84,8 @@ void testing() {
 		case 2:
 			if (wait(1000)) {
 				Serial.println("Switching to 3");
-				leftMotor.setVelocity(0, REV);
-				rightMotor.setVelocity(0, REV);
+				leftMotor.halt();
+				rightMotor.halt();
 				testNum++;
 			}
 			break;
@@ -93,8 +102,8 @@ void testing() {
 		case 4:
 			if (wait(1000)) {
 				Serial.println("Switching to 5");
-				leftMotor.setVelocity(0, FWD);
-				rightMotor.setVelocity(0, REV);
+        leftMotor.halt();
+        rightMotor.halt();
 				testNum++;
 			}
 			break;
@@ -111,8 +120,8 @@ void testing() {
 		case 6:
 			if (wait(1000)) {
 				Serial.println("Switching to 7");
-				leftMotor.setVelocity(0, FWD);
-				rightMotor.setVelocity(0, REV);
+        leftMotor.halt();
+        rightMotor.halt();
 				testNum++;
 			}
 			break;
@@ -127,6 +136,7 @@ void testing() {
 
 }
 
+
 bool wait(unsigned long delay_ms) {
 	static unsigned long  timer = millis();
 
@@ -138,6 +148,15 @@ bool wait(unsigned long delay_ms) {
 		return false;
 }
 
+
+
+
+
+
+
+
+
+#if 0
 // State machine for part 1A
 void stateMachine() {
 	switch (state) {
@@ -154,7 +173,7 @@ void stateMachine() {
 		case STBY:
 			if (not digitalRead(SWCH0)) {
 				state = OFF;
-				myBotUI.allStop();
+				fsmUI.allStop();
 			} else if (not digitalRead(BTN[0])) {
 				state = RUN;
 				ledRun();
@@ -170,7 +189,7 @@ void stateMachine() {
 		case RUN:
 			if (not digitalRead(SWCH0)) {
 				state = OFF;
-				myBotUI.allStop();
+				fsmUI.allStop();
 			} else if (not digitalRead(BTN[1])) {
 				state = SLP;
 				ledSlp();
@@ -186,7 +205,7 @@ void stateMachine() {
 		case SLP:
 			if (not digitalRead(SWCH0)) {
 				state = OFF;
-				myBotUI.allStop();
+				fsmUI.allStop();
 			} else if (not digitalRead(BTN[0])) {
 				state = RUN;
 				ledRun();
@@ -199,7 +218,7 @@ void stateMachine() {
 		case DIAG:
 			if (not digitalRead(SWCH0)) {
 				state = OFF;
-				myBotUI.allStop();
+				fsmUI.allStop();
 			} else
 				ledDiag(numProbs);
 			break;
@@ -208,24 +227,25 @@ void stateMachine() {
 
 
 void ledStby() {
-	myBotUI.allStop();
-	myBotUI.setMode(RED, BLINK, 1000);
+	fsmUI.allStop();
+	fsmUI.setMode(RED, BLINK, 1000);
 }
 
 
 void ledRun() {
-	myBotUI.allStop();
-	myBotUI.setMode(GRN, SOLID);
+	fsmUI.allStop();
+	fsmUI.setMode(GRN, SOLID);
 }
 
 
 void ledSlp() {
-	myBotUI.allStop();
-	myBotUI.setMode(BLU, PULSE, 1000);
+	fsmUI.allStop();
+	fsmUI.setMode(BLU, PULSE, 1000);
 }
 
 
 void ledDiag(int numProbs) {
-	myBotUI.allStop();
-	myBotUI.setMode(ORN, FLASH, 300, numProbs, 1000);
+  fsmUI.allStop();
+	fsmUI.setMode(ORN, FLASH, 300, numProbs, 1000);
 }
+#endif
