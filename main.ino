@@ -1,10 +1,13 @@
 #include "botUI.h"
 #include "motorControl.h"
+#include "lightSensor.h"
 
 // Pin declarations
 const int LED_PINS[] = {7, 8, 9, 10};
 const int MTR_L_PINS[] = {4, 5};
 const int MTR_R_PINS[] = {2, 3};
+
+const int SENSOR_PIN = A0;
 
 const int SWCH0  = 6; // switch port
 const int BTN[3] = {7, 8, 9}; // array of button ports
@@ -27,6 +30,7 @@ enum state_t {
 botUI        myBotUI(LED_PINS, 4);
 motorControl leftMotor(MTR_L_PINS);
 motorControl rightMotor(MTR_R_PINS);
+lightSensor  myLightSensors(SENSOR_PIN, 12, 11);
 
 
 void setup() {
@@ -37,11 +41,13 @@ void setup() {
 
 
 void loop() {
-	stateMachine();
+//	stateMachine();
 	myBotUI.loop();
 	leftMotor.loop();
 	rightMotor.loop();
-	testing();
+  myLightSensors.loop();
+  
+//	testing();
 }
 
 /* TODO: Create a motor stop public function */
@@ -62,7 +68,7 @@ void testing() {
 			}
 			break;
 			
-			 Straight back */
+		/* Straight back */
 		case 1:
 			if (wait(500)) {
 				Serial.println("Switching to 2");
