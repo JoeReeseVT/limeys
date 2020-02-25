@@ -23,16 +23,18 @@ class lightSensor {
     lightSensor();
     lightSensor(int sensor, int red, int blue);   // Constructor
     void loop();
-    void detectTrack();            // All this does is report the current detected colors
+    track_t detectTrack();            // All this does is report the current detected colors
     void calcDeltaV(sensor_t clr); // Find the differrence between the new voltage and old voltage
   
   private:
     const   int RED_PWM = 255;
     const   int BLU_PWM = 255;
-    const   int RED_THRESH = 700;
-    const   int BLU_THRESH = 700;
-    const   int BLK_THRESH = 850;
-    const   unsigned long BLINK_PERIOD = 500;   // milliseconds
+    const   int RED_THRESH = 620;
+    const   int BLU_THRESH = 470;
+    const   int YR_THRESH = 450;
+    const   int YB_THRESH = 390;
+    const   int BLK_THRESH = 800;
+    const   unsigned long BLINK_PERIOD = 200;   // milliseconds
     const   unsigned long WAIT_TIME    = 100;   // milliseconds
     int     ledPins[2];
     int     duties[2];

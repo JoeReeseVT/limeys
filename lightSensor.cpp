@@ -33,7 +33,7 @@ void lightSensor::loop() {
   }
   
   detectTrack();
-  
+  #if 1
   if (curTrack == BLU_TK)
     Serial.println("BLUE");
   else if (curTrack == RED_TK)
@@ -44,15 +44,14 @@ void lightSensor::loop() {
     Serial.println("BLACK");
   else if (curTrack == ERR_TK)
     Serial.println("ERROR");
-  
-  #if 0 
+ 
+  #elif 0
   Serial.print("Blue volt: ");
   Serial.print(curVolt[BLU_SENS]);
   Serial.print("\tRed volt: ");
   Serial.println(curVolt[RED_SENS]);
-  #endif
   
-  #if 0
+  #elif 0
   if (abs(deltaVolt[BLU_SENS]) > 100 or abs(deltaVolt[RED_SENS]) > 10) {
     Serial.print("Blue delta: ");
     Serial.print(deltaVolt[BLU_SENS]);
@@ -68,15 +67,19 @@ void lightSensor::loop() {
  * Black to blue:   blue should have negative delta, red should have small delta
  * Black to yellow: blue and red should both have negative delta
  * * * * * * * * * */ 
-void lightSensor::detectTrack() { //This will output and int/index number to light up the specific LED
-    if (curVolt[RED_SENS] < RED_THRESH )
-      curVolt[BLU_SENS] < BLU_THRESH ? curTrack = YLW_TK : curTrack = RED_TK;
-    else if (curVolt[BLU_SENS] < BLU_THRESH)
+track_t lightSensor::detectTrack() { //This will output and int/index number to light up the specific LED
+    if (curVolt[RED_SENS] < YR_THRESH and curVolt[BLU_SENS] < YB_THRESH)
+      curTrack = YLW_TK;
+    else if (curVolt[RED_SENS] < RED_THRESH and curVolt[BLU_SENS] >= BLK_THRESH)
+      curTrack = RED_TK;
+    else if (curVolt[BLU_SENS] < BLU_THRESH and curVolt[RED_SENS] >= BLK_THRESH) // not curVolt[RED_SENS] is implied
       curTrack = BLU_TK;
     else if (curVolt[RED_SENS] > BLK_THRESH and curVolt[BLU_SENS] > BLK_THRESH)
       curTrack = BLK_TK;
     else
       curTrack = ERR_TK;
+
+    return curTrack;
     /*
     if (deltaVolt[RED_SENS] < RED_THRESH and deltaVolt[BLU_SENS] < BLU_THRESH) { // Yellow 
         curTrack = YLW_TK;

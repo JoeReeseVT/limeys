@@ -6,8 +6,8 @@
 /* Constructor sets direction to FWD and speed to 0
  * and sets pin modes.
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-motorControl::motorControl(const int PINS_ARR[2]) {
-
+motorControl::motorControl(const int PINS_ARR[2], const float SCALE) {
+  scale = SCALE;
 	for (int i = FWD; i <= REV; i++) {
 		PINS[i] = PINS_ARR[i];
 		pinMode(PINS[i], OUTPUT);
@@ -28,8 +28,8 @@ void motorControl::setVelocity(int spd, spin_t spin) {
 		curSpin = spin;
 	}
 	
-	tgtPwms[FWD] = spd * (int)(not curSpin); 
-	tgtPwms[REV] = spd * (int)(curSpin);
+	tgtPwms[FWD] = scale * spd * (int)(not curSpin); 
+	tgtPwms[REV] = scale * spd * (int)(curSpin);
 }
 
 
