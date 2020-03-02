@@ -2,17 +2,25 @@
 #include "Arduino.h"
 #include "motorControl.h"
 
+extern unsigned long MILLIS;
+
 
 /* Constructor sets direction to FWD and speed to 0
  * and sets pin modes.
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-motorControl::motorControl(const int PINS_ARR[2], const float SCALE) {
-  scale = SCALE;
+motorControl::motorControl(const int PINS_ARR[2]) {
 	for (int i = FWD; i <= REV; i++) {
 		PINS[i] = PINS_ARR[i];
 		pinMode(PINS[i], OUTPUT);
 	}
 	setVelocity(0, FWD);
+}
+
+
+/* Shorthand function for stopping the motor
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void motorControl::halt() {
+  setVelocity(0, curSpin);
 }
 
 
@@ -22,14 +30,15 @@ motorControl::motorControl(const int PINS_ARR[2], const float SCALE) {
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void motorControl::setVelocity(int spd, spin_t spin) {
 	if (spin != curSpin or spd != tgtPwms[FWD] and spd != tgtPwms[REV]) {
-		accelTimer = millis();
+    curSpin = spin;
+		
+		accelTimer = MILLIS;
 		for (int i = FWD; i <= REV; i++)
-		deltas[i] = curPwms[i] - tgtPwms[i];
-		curSpin = spin;
+		  deltas[i] = curPwms[i] - tgtPwms[i];
 	}
 	
-	tgtPwms[FWD] = scale * spd * (int)(not curSpin); 
-	tgtPwms[REV] = scale * spd * (int)(curSpin);
+	tgtPwms[FWD] = spd * (int)(not curSpin); 
+	tgtPwms[REV] = spd * (int)(curSpin);
 }
 
 
@@ -40,7 +49,7 @@ void motorControl::setVelocity(int spd, spin_t spin) {
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void motorControl::loop() {
 	static unsigned long deltaT;
-	deltaT = millis() - accelTimer;
+	deltaT = MILLIS - accelTimer;
 
   /*
   if (deltaT <= RAMP_TIME) 

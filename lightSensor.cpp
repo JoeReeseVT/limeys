@@ -1,39 +1,58 @@
 #include "lightSensor.h"
+#include "led.h"
+
+extern unsigned long MILLIS;
+
 #include <limits.h>
 
-//lightSensor::lightSensor() {
-  
-//}
 
-lightSensor::lightSensor(int sensor, int red, int blue) {
+lightSensor::lightSensor(int sensor, int red, int blu) 
+  : redLed(red, 255), bluLed(blu, 255) {
   SENSOR   = sensor;
-  ledPins[RED_SENS] = red;
-  ledPins[BLU_SENS] = blue;
-  curTrack = ERR_TK; 
-  duties[RED_SENS]  = 0;
-  duties[BLU_SENS]  = BLU_PWM;
+      
+    redLed.setMode(BLINK, BLINK_PERIOD);
+    bluLed.setMode(BLINK, BLINK_PERIOD);
+    bluLed.phaseInvert();
+    pinMode(25, OUTPUT); // DBG
 }
 
 /* There is an array called int duties[2] that can hold pwm values for each pin */
-void lightSensor::loop() {
-  static       unsigned long toglTimer  = 0;
-  static       unsigned long sensTimer  = ULONG_MAX;
-  static const unsigned long LED_PERIOD = 500; // milliseconds
+void lightSensor::loop() { 
+  redLed.loop();
+  bluLed.loop();
+
+
+  static unsigned long timer = 0;
+  static int quarterWaves = 0;
   
-  if (millis() - toglTimer >= LED_PERIOD) {
-      toglTimer = millis();
-      sensTimer = millis();
-      duties[RED_SENS] = RED_PWM - duties[RED_SENS];
-      duties[BLU_SENS] = BLU_PWM - duties[BLU_SENS];
-      analogWrite(ledPins[RED_SENS], duties[RED_SENS]);
-      analogWrite(ledPins[BLU_SENS], duties[BLU_SENS]);
-  } else if (millis() - sensTimer >= LED_PERIOD >> 1) {
+  if (MILLIS - timer >= BLINK_PERIOD >> 2) {
+    timer = MILLIS;
+    quarterWaves++;
+    if (quarterWaves % 2) {// if Odd {
+      redLed.isOn() ? calcDeltaV(RED_SENS) : calcDeltaV(BLU_SENS); 
+ //     digitalWrite(25, !digitalRead(25)); // DBG
+      detectTrack();
+
+/*
+  static unsigned long toglTimer = 0;
+  static unsigned long sensTimer = ULONG_MAX; //BLINK_PERIOD / 2;
+
+  static bool indicator = true; // DBG
+
+  if (MILLIS - toglTimer >= BLINK_PERIOD) {
+      toglTimer = MILLIS;
+      sensTimer = MILLIS;
+  } else if (MILLIS - sensTimer >= BLINK_PERIOD >> 1) {
+      redLed.isOn() ? calcDeltaV(RED_SENS) : calcDeltaV(BLU_SENS); 
+      detectTrack();
+      indicator = not indicator; // DBG
+      digitalWrite(25, indicator);
+      //analogWrite(8, 255 * indicator); // DBG
       sensTimer = ULONG_MAX;
-      duties[RED_SENS] ? calcDeltaV(RED_SENS) : calcDeltaV(BLU_SENS);
   }
-  
-  detectTrack();
-  #if 1
+*/
+
+#if 0
   if (curTrack == BLU_TK)
     Serial.println("BLUE");
   else if (curTrack == RED_TK)
@@ -44,62 +63,39 @@ void lightSensor::loop() {
     Serial.println("BLACK");
   else if (curTrack == ERR_TK)
     Serial.println("ERROR");
- 
-  #elif 0
+#elif 0
   Serial.print("Blue volt: ");
   Serial.print(curVolt[BLU_SENS]);
   Serial.print("\tRed volt: ");
   Serial.println(curVolt[RED_SENS]);
-  
-  #elif 0
-  if (abs(deltaVolt[BLU_SENS]) > 100 or abs(deltaVolt[RED_SENS]) > 10) {
-    Serial.print("Blue delta: ");
-    Serial.print(deltaVolt[BLU_SENS]);
-    Serial.print("\tRed delta: ");
-    Serial.println(deltaVolt[RED_SENS]);
+#endif
+    }
   }
-  #endif
+
 }
 
 
-/* CASES:
- * Black to red:    blue should have small delta, red should have very negative
- * Black to blue:   blue should have negative delta, red should have small delta
- * Black to yellow: blue and red should both have negative delta
- * * * * * * * * * */ 
-track_t lightSensor::detectTrack() { //This will output and int/index number to light up the specific LED
-    if (curVolt[RED_SENS] < YR_THRESH and curVolt[BLU_SENS] < YB_THRESH)
-      curTrack = YLW_TK;
-    else if (curVolt[RED_SENS] < RED_THRESH and curVolt[BLU_SENS] >= BLK_THRESH)
-      curTrack = RED_TK;
-    else if (curVolt[BLU_SENS] < BLU_THRESH and curVolt[RED_SENS] >= BLK_THRESH) // not curVolt[RED_SENS] is implied
+track_t lightSensor::getCurTrack() {
+  return curTrack;
+}
+
+
+void lightSensor::detectTrack() { //This will output and int/index number to light up the specific LED
+    if (curVolt[RED_SENS] < RED_THRESH )
+      curVolt[BLU_SENS] < BLU_THRESH ? curTrack = YLW_TK : curTrack = RED_TK;
+    else if (curVolt[BLU_SENS] < BLU_THRESH)
       curTrack = BLU_TK;
     else if (curVolt[RED_SENS] > BLK_THRESH and curVolt[BLU_SENS] > BLK_THRESH)
       curTrack = BLK_TK;
     else
       curTrack = ERR_TK;
-
-    return curTrack;
-    /*
-    if (deltaVolt[RED_SENS] < RED_THRESH and deltaVolt[BLU_SENS] < BLU_THRESH) { // Yellow 
-        curTrack = YLW_TK;
-    } else if (deltaVolt[RED_SENS] < RED_THRESH and deltaVolt[BLU_SENS] >= BLU_THRESH) {  // Red
-        curTrack = RED_TK;
-    } else if (deltaVolt[RED_SENS] >= RED_THRESH and deltaVolt[BLU_SENS] < BLU_THRESH) {  // Blue  
-        curTrack = BLU_TK;
-    } else if (deltaVolt[RED_SENS] >= RED_THRESH and deltaVolt[BLU_SENS] >= BLU_THRESH) { // Neither
-        ; // do nothing!
-    } else
-        curTrack = ERR_TK;
-    */
 }
 
 
 /* Track moving derivative of the intensity coming into the light sensor
- * 
  * * * * * */
 void lightSensor::calcDeltaV(sensor_t clr) {
-    int oldVolt    = curVolt[clr];
+//    int oldVolt    = curVolt[clr];
     curVolt[clr]  = analogRead(SENSOR);
-    deltaVolt[clr] = oldVolt - curVolt[clr]; 
+//    deltaVolt[clr] = oldVolt - curVolt[clr]; 
 }
