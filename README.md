@@ -1,2 +1,137 @@
-# limeys
-Tufts EE 31 Junior Design 2020 team Smaragdine
+# Tufts Junior Design 2020, Team Smaragdine
+
+## Project summary
+This code is to control a small "Swarmbot" consisting of DC motors, photosensors, hall effect sensors, collision detection switches, and a 2 MHz radio communication system. The final bot will be capable of following different-colored tracks, responding to collisions, and transmitting/receiving radio signal to interface with a partner bot.
+
+## Joe's ridiculously granular style guide
+### Naming conventions
+* `camelCase` is used for variable and function names
+* `CAPS_SNAKE` is used for constants
+* Enumerated types are denoted by `_t`.
+* For pointer declarations, the asterisk goes with the identifier, not the type:
+```c++
+int *myPointer;
+```
+
+* Avoid abbreviations unless the name would otherwise be absurdly long.
+* Specific abbreviations `cur`, `prv`, `nxt` when necessary
+* Prefer booleans denoted `isFoo` unless this muddles the intent of the name
+* Specificity of compound names generailly increases toward the right, e.g. `motorLeft`, `mtrLeftFwd`, `mtrLeftFwdPin`.
+* Classes should `#define` `<CLASSNAME>_H` formatted as such.
+* Prefer `and`/`or` keywords over `&&`/`||`
+
+### Commenting
+* Generally avoid `//` comments unless noting something small, like variable units (`// milliseconds`)  or to denote what keyword a closing bracket belongs to (`// switch`).
+* If you have to use `//` on consecutive lines, pad with spaces to align them:
+```c++
+bool foobar; // Comment about foobar
+int  baz;    // Comment about baz
+```
+
+* For brief descriptions of short blocks, use `/* Block line comments */`
+* For functions and any blocks that require more than one line of explanation, use the following template:
+```c++
+/* Multi
+ * line
+ * comment
+ * The final `/` is in column 79
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ ```
+ 
+ * Function contracts and file headings should follow this template:
+ ```c++
+/* <For file headers, one line saying what this file is>
+ *
+ * Purpose: <multi line purpose continues on the next line after 4 additional
+ *     space characters.>
+ *
+ * Parameters:
+ *     <foo> : <Don't include parameters section if there aren't any>
+ *     <bar> : <Multi-line parameter descriptions are kinda uncomfortable, but
+ *             for now I've been continuing flush with the previous line>
+ *
+ *     <bigLongName> : <Add a newline if changing the indentation amount>
+ *
+ *  Returns: <Description of return value, what it could be, when it takes
+ *      those values, only include if non-void>
+ *
+ *  Effects: <Descibe whether/when any state is modified by the function, if
+ *      applicable. Otherwise, omit this section too>
+ *
+ *  TODO/Notes/Known bugs: <If there are any of these, include them separated
+ *      by newlines like the rest of these sections>
+ * 
+ *     <New paragraphs skip a line and inherit indentation>
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */ 
+```
+ 
+### Indentation, brackets, and spacing
+ 
+* Use tab characters (nominally, tab width of 4) for leading whitespace, except when aligning functions/statements that span multiple lines:
+```c++
+void myBigLongFunction(unsigned long bigVariableName, 
+                       int paramsContinued) {
+	
+	/* Above should all be spaces */
+
+	if (condition1 and condition2 and condition3 or
+	    cond3      and cond4);
+
+	/* Above is one tab followed by spaces *
+
+}
+```
+
+* Functions, loops, conditionals, and other curly-brace blocks open on same-line
+* Place `else`s on the same line as previous `if` closing braces
+* Don't use braces for single-statement loops/conditionals
+* Group variable declarations by type
+* Separate functions and other major blocks by two empty lines:
+```
+#ifndef EXAMPLE_H
+#define EXAMPLE_H
+
+
+/* Includes, constants, objects etc are kinda their own thing */
+#include "foo.h"
+
+const int A = 1,
+          B = 2,
+          C = 3;
+
+
+/* Purpose: Example function
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */ 
+void myFunc() {
+	/* STUB */
+}
+
+
+#endif
+```
+
+### Miscellaneous
+* In general, code what you mean. Even though `1000 >> 1` is faster, strictly speaking, than `1000 / 2`, the latter is preferable if you mean to say "1000 divided by 2" and not "1000 arithmetic shift right."
+* Similarly, don't use early returns to replace `else` blocks. For example:
+```
+/* THIS IS MISLEADING */
+int myFunc(bool isFoo) {
+	if (isFoo)
+		return 1;
+	return 0;
+}
+
+
+/* THIS IS BETTER */
+int myfunc(bool isFoo) {
+	if (isFoo)
+		return 1;
+	else
+		return 0;
+}
+
+/* Ternary operator is preferable */
+int myFunc(bool isFoo) {
+	isFoo ? return 1 : return 0;
+}
+```
