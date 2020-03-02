@@ -19,6 +19,22 @@ int *myPointer;
 * Specificity of compound names generailly increases toward the right, e.g. `motorLeft`, `mtrLeftFwd`, `mtrLeftFwdPin`.
 * Classes should `#define` `<CLASSNAME>_H` formatted as such.
 * Prefer `and`/`or` keywords over `&&`/`||`
+* For things like constructors where it makes sense for parameters to have the same name as data members, do it. Example:
+```c++
+class myClass {
+	public:
+		myClass(int data);
+	private:
+		int data;
+};
+
+
+/* Purpose: Initialize data members in a sane way
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+myClass::myClass(int data) {
+	this->data = data;
+}
+```
 
 ### Commenting
 * Generally avoid `//` comments unless noting something small, like variable units (`// milliseconds`)  or to denote what keyword a closing bracket belongs to (`// switch`).
@@ -66,7 +82,6 @@ int  baz;    // Comment about baz
 ```
  
 ### Indentation, brackets, and spacing
- 
 * Use tab characters (nominally, tab width of 4) for leading whitespace, except when aligning functions/statements that span multiple lines:
 ```c++
 void myBigLongFunction(unsigned long bigVariableName, 
@@ -85,9 +100,11 @@ void myBigLongFunction(unsigned long bigVariableName,
 * Functions, loops, conditionals, and other curly-brace blocks open on same-line
 * Place `else`s on the same line as previous `if` closing braces
 * Don't use braces for single-statement loops/conditionals
-* Group variable declarations by type
-* Separate functions and other major blocks by two empty lines:
-```
+* Think of bits of code as phrases, sentences, paragraphs, etc. Keep related code close together and don't be afraid of newlines when changing the focus.
+* Group variable declarations by type whenever possible
+* Separate functions and other major blocks by two empty lines. (Only use double-newlines at the global level, not within functions)
+:
+```c++
 #ifndef EXAMPLE_H
 #define EXAMPLE_H
 
@@ -111,9 +128,12 @@ void myFunc() {
 ```
 
 ### Miscellaneous
+* For overloaded constructors, better to make a private init function and call it from the constructors. Reduces redundancy.
+* List built-in headers like `<Arduino.h>` before `"foo.h"`
+* Only `#include` what is strictly needed for the current file. For instance, don't `#include` something in a header just because you think the implementation will require it. If the implementation needs it, include it in the implementation.
 * In general, code what you mean. Even though `1000 >> 1` is faster, strictly speaking, than `1000 / 2`, the latter is preferable if you mean to say "1000 divided by 2" and not "1000 arithmetic shift right."
 * Similarly, don't use early returns to replace `else` blocks. For example:
-```
+```c++
 /* THIS IS MISLEADING */
 int myFunc(bool isFoo) {
 	if (isFoo)
@@ -130,7 +150,8 @@ int myfunc(bool isFoo) {
 		return 0;
 }
 
-/* Ternary operator is preferable */
+
+/* Ternary operator is pretty great */
 int myFunc(bool isFoo) {
 	isFoo ? return 1 : return 0;
 }
