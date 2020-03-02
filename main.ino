@@ -1,4 +1,4 @@
-#include "botUI.h"
+#include "led.h"
 #include "driveControl.h"
 #include "motorControl.h"
 #include "lightSensor.h"
@@ -11,8 +11,6 @@
 
 void setup() {
   Serial.begin(9600);
-  for (int k = 6; k <= 9; k++)
-    pinMode(k, INPUT_PULLUP); // setup pins to pull up
 }
 
 
