@@ -57,9 +57,11 @@ class botUI {
 		int           duties[];
 
 	public:
+    botUI();
 		botUI(const int PINS_ARRAY[], const int LENGTH); // Sets pin modes and initializes all colors to STOP
 		
 		void loop(); 
+    bool isOn(color_t color);
 		void setMode(color_t color, mode_t mode, unsigned long period = 0, int numFlash = 0, unsigned long wait = 0);
 		void allStop();
 

@@ -41,6 +41,11 @@ void botUI::setMode(color_t color, mode_t mode,
 //}
 
 
+bool botUI::isOn(color_t color) {
+  return duties[color] > 0;
+}
+
+
 /* This is where all the control actually happens */
 void botUI::loop() {
 	static const int PWM_MAX = 255;
