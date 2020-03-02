@@ -1,45 +1,55 @@
+/*
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 #ifndef LIGHTSENSOR_H
 #define LIGHTSENSOR_H
 
-#include "Arduino.h"
 
+#include <Arduino.h>
+#include "led.h"
+
+
+/*
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 enum track_t {
-    BLK_TK, // TK for "track"
-    RED_TK,
-    BLU_TK,
-    YLW_TK,
-    ERR_TK,
-};
-
-
-enum sensor_t {
-  RED_SENS,
-  BLU_SENS
+	BLK_TK,
+	RED_TK,
+	BLU_TK,
+	YLW_TK,
+	ERR_TK,
 };
 
 
 class lightSensor {
-  public:
-    lightSensor();
-    lightSensor(int sensor, int red, int blue);   // Constructor
-    void loop();
-    void detectTrack();            // All this does is report the current detected colors
-    void calcDeltaV(sensor_t clr); // Find the differrence between the new voltage and old voltage
-  
-  private:
-    const   int RED_PWM = 255;
-    const   int BLU_PWM = 255;
-    const   int RED_THRESH = 700;
-    const   int BLU_THRESH = 700;
-    const   int BLK_THRESH = 850;
-    const   unsigned long BLINK_PERIOD = 500;   // milliseconds
-    const   unsigned long WAIT_TIME    = 100;   // milliseconds
-    int     ledPins[2];
-    int     duties[2];
-    int     SENSOR;
-    track_t curTrack;
-    int     curVolt[2];
-    int     deltaVolt[2];
+	public:
+		lightSensor(int sensor, int red, int blu);
+
+		void loop();
+		
+		track_t detectTrack();
+	
+	private:
+		void measureRed();
+		void measureBlue();
+
+		const uint32_t BLINK_PERIOD = 128; // milliseconds
+		
+		const int RED_THRESH = 620,
+		          BLU_THRESH = 470,
+		          YR_THRESH  = 450,
+		          YB_THRESH  = 390,
+		          BLK_THRESH = 800;
+
+		track_t curTrack;
+		
+		led red, blue;
+
+		int sensorPin,
+		    redDuty, blueDuty,
+		    redVoltage, blueVoltage;
 };
+
 
 #endif
