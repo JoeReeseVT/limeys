@@ -26,6 +26,7 @@ class led {
 		
 		void loop(); 
     bool isOn();
+    void phaseInvert();
 		void setMode(mode_t mode, unsigned long period = 0, int numFlash = 0, unsigned long wait = 0);
 		void setOff();
 

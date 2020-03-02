@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 
+
 /* Forward output corresponds to the pin that pushes that motor forward
  * e.g. the motor on the starboard side has clockwise being forward
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -29,16 +30,16 @@ enum spin_t {
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 class motorControl {
 	public:
-		motorControl(const int PINS_ARR[2], const float SCALE);
+		motorControl(const int PINS_ARR[2]);
 		void loop();
+    void halt();
 		void setVelocity(int spd, spin_t spin);
 
 	private:
 		const unsigned long RAMP_TIME  = 5; // ms to go from A to B
 		unsigned long accelTimer;
 		int PINS[2];
-
-    float  scale;
+	  
 		int    tgtPwms[2];
 		int    curPwms[2];
 		int    deltas[2];
