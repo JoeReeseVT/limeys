@@ -31,25 +31,35 @@ led::led(const int ledPin, const int pwmMax) {
  * 
  * Uses the fact that odd multiples of half the blink period 
  * should be ON
- * **INSERT BELOW**
+ *
+ * SIGNAL: Uses the same logic as FLASH but only executes one cycle before
+ * switching to STOP.
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */  
 void led::loop() {
 	switch (mode) {
 
 		case BLINK:
-			if (MILLIS - timer >= period >> 1) { // Quick divide by 2
+			if (MILLIS - timer >= period / 2) { // Quick divide by 2
 				timer = MILLIS;
 				duty = pwmMax * not duty;
 			}
 			break;
-
 
 		case FLASH:
 			if (MILLIS - timer >= period * flashes + wait)
 				timer = MILLIS;
 			else if (MILLIS - timer >= period * flashes)
 				duty = 0;
-			else if ((((MILLIS - timer)) / (period >> 1)) % 2)
+			else if ((((MILLIS - timer)) / (period / 2)) % 2)
+				duty = pwmMax;
+			else 
+				duty = 0;
+			break;
+
+        case SIGNAL:
+			if (MILLIS - timer >= period * flashes) {
+				mode = STOP;
+			else if ((((MILLIS - timer)) / (period / 2)) % 2)
 				duty = pwmMax;
 			else 
 				duty = 0;

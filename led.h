@@ -19,6 +19,7 @@
 enum mode_t {
 	BLINK,
 	FLASH,
+    SIGNAL, // Like flash but only runs once then goes to STOP
 	PULSE,
 	SOLID,
 	STOP
