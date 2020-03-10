@@ -32,8 +32,8 @@ led::led(const int ledPin, const int pwmMax) {
  * Uses the fact that odd multiples of half the blink period 
  * should be ON
  *
- * SIGNAL: Uses the same logic as FLASH but only executes one cycle before
- * switching to STOP.
+ * SIGNAL: After the number of flashes * the period of each flash elapses,
+ * 
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */  
 void led::loop() {
 	switch (mode) {
@@ -57,9 +57,9 @@ void led::loop() {
 			break;
 
         case SIGNAL:
-			if (MILLIS - timer >= period * flashes) {
-				mode = STOP;
-			else if ((((MILLIS - timer)) / (period / 2)) % 2)
+			if (MILLIS - timer >= period * flashes)
+				mode  = STOP;
+			else if (((MILLIS - timer) / (period / 2)) % 2)
 				duty = pwmMax;
 			else 
 				duty = 0;
@@ -92,29 +92,30 @@ bool led::isOn() {
 
 
 /* Parameters:
- *	mode		: One of the led modes enumerated in led.h
+ *	mode    : One of the led modes enumerated in led.h
+ *	period  : Period of cyclic functions, in milliseconds 
+ *	flashes : Number of flashes during FLASH mode
+ *	wait    : Time between each burst of flashes in FLASH mode (milliseconds)
+ *	
+ * Effects: Resets timer every time setMode is called
  * * * * * * * * * * * * * * * * * * * * * * */
 void led::setMode(mode_t mode) {
 	setMode(mode, this->period, this->flashes, this->wait);
 }
 
 
-/* Parameters:
- *	mode		: One of the led modes enumerated in led.h
- *	period	: Period of cyclic functions, in milliseconds 
- * * * * * * * * * * * * * * * * * * * * * * */
 void led::setMode(mode_t mode, uint32_t period) {
 	setMode(mode, period, this->flashes, this->wait);
 }
 
 
-/* Parameters:
- *	mode    : One of the led modes enumerated in led.h
- *	period  : Period of cyclic functions, in milliseconds 
- *	flashes : Number of flashes during FLASH mode
- *	wait    : Time between each burst of flashes in FLASH mode (milliseconds)
- * * * * * * * * * * * * * * * * * * * * * * */
+void led::setMode(mode_t mode, uint32_t period, int flashes) {
+	setMode(mode, period, flashes, this->wait);
+}
+
+
 void led::setMode(mode_t mode, uint32_t period, int flashes, uint32_t wait) {
+	timer = MILLIS;
 	this->mode    = mode;
 	this->period  = period;
 	this->flashes = flashes;

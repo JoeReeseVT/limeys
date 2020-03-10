@@ -50,10 +50,10 @@ extern uint32_t MILLIS;
 
 
 /* For each test you include, add the corresponding test from loop() */
+#include "testLed.h"
 //#include "testMotor.h"
 //#include "testDrive.h"
-#include "testPathFollow.h"
-
+//#include "testPathFollow.h"
 
 /* High baud rate -> fast printing, to minimize timing impact */
 void setup() { 
@@ -64,7 +64,8 @@ void setup() {
 void loop() {
 	MILLIS = micros() / 1000; 
 
+	testLed();
 	//testMotor();
 	//testDrive();
-	testPathFollow();
+	//testPathFollow();
 }

@@ -35,7 +35,8 @@ class led {
 		 
 		bool isOn();
 		void setMode(mode_t mode);
-		void setMode(mode_t mode, uint32_t period);
+		void setMode(mode_t mode, uint32_t period);		
+		void setMode(mode_t mode, uint32_t period, int flashes);
 		void setMode(mode_t mode, uint32_t period, int flashes, uint32_t wait);
 		void setOff();
 		void phaseInvert();
