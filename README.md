@@ -29,8 +29,10 @@ class myClass {
 };
 
 
-/* Purpose: Initialize data members in a sane way
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*
+ * Purpose
+ *     Initialize data members in a sane way
+ */
 myClass::myClass(int data) {
     this->data = data;
 }
@@ -38,54 +40,62 @@ myClass::myClass(int data) {
 
 ### Commenting
 * Generally avoid `//` comments unless noting something small, like variable units (`// milliseconds`)  or to denote what keyword a closing bracket belongs to (`// switch`).
+* Put at least two spaces between end of line and start of inline comment.
 * If you have to use `//` on consecutive lines, pad with spaces to align them:
 ```c++
-bool foobar; // Comment about foobar
-int  baz;    // Comment about baz
+bool foobar;  // Comment about foobar
+int  baz;     // Comment about baz
 ```
 
 * For brief descriptions of short blocks, use `/* Block line comments */`
 * For functions and any blocks that require more than one line of explanation, use the following template:
 ```c++
-/* Multi
+/*
+ * Multi
  * line
  * comment
  * The final `/` is in column 75
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ */
  ```
- 
+
  * Function contracts and file headings should follow this template:
  ```c++
-/* <For file headers, one line saying what this file is>
+/*
+ * For file headers, one line saying what this file is
  *
- * Purpose: <multi line purpose continues on the next line after 4 additional
- *     space characters.>
+ * A brief description of the purpose of the code. Multi line purpose
+ * continues on the next line with same indentation.
  *
- * Parameters:
- *     <foo> : <Don't include parameters section if there aren't any>
- *     <bar> : <Multi-line parameter descriptions are kinda uncomfortable, but
- *             for now I've been continuing flush with the previous line>
+ * foo
+ *     Description of first parameter
  *
- *     <bigLongName> : <Add a newline if changing the indentation amount>
+ * bar
+ *     Description of second parameter. Multi-lines next line again gets
+ *     same indentation. Newline between each parameter.
  *
- *  Returns: <Description of return value, what it could be, when it takes
- *      those values, only include if non-void>
+ * bigLongParameterName
+ *     Blah blah blah
  *
- *  Effects: <Descibe whether/when any state is modified by the function, if
- *      applicable. Otherwise, omit this section too>
+ * Returns
+ *     Description of return value, what it could be, when it takes those
+ *     values. Only include if non-void.
  *
- *  TODO/Notes/Known bugs: <If there are any of these, include them separated
- *      by newlines like the rest of these sections>
- * 
- *     <New paragraphs skip a line and inherit indentation>
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */ 
+ * Effects
+ *     Descibe whether/when any state is modified by the function, if
+ *     applicable. Otherwise, omit this section too
+ *
+ * TODO/Notes/Known bugs
+ *     If there are any of these, include them here.
+ *
+ *     New paragraphs skip a line and inherit indentation
+ */
 ```
- 
+
 ### Indentation, brackets, and spacing
 * Use SPACE characters, not tab, for leading whitespace.
 * If possible, wrap long lines to be visually inside any brackets:
 ```c++
-void myBigLongFunction(unsigned long bigVariableName, 
+void myBigLongFunction(unsigned long bigVariableName,
                        int paramsContinued) {
 
     /* Above should all be spaces */
@@ -97,10 +107,10 @@ void myBigLongFunction(unsigned long bigVariableName,
 
 * Functions, loops, conditionals, and other curly-brace blocks open on same-line
 * Place `else`s on the same line as previous `if` closing braces
-* DO use braces for single-statement loops/conditionals. You can put the statement in-line if it fits:
+* Use braces even for single-statement loops/conditionals. This is to prevent mistakes when modifying code later on. You can put the statement in-line if it fits:
 ```c++
-    if (condition) {single_statement();}
-    else {foo = some_value;}
+    if (condition) {singleStatement();}
+    else {foo = someValue;}
     // etc...
 ```
 * Think of bits of code as phrases, sentences, paragraphs, etc. Keep related code close together and don't be afraid of newlines when changing the focus.
@@ -119,8 +129,10 @@ const int B = 2;
 const int C = 3;
 
 
-/* Purpose: Example function
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */ 
+/*
+ * Example function
+ * ...
+ */
 void myFunc() {
     /* STUB */
 }
@@ -130,26 +142,35 @@ void myFunc() {
 ```
 
 ### Miscellaneous
+* If you're passing a parameter by reference, declare that parameter as
+  `const` if the function doesn't modify the thing being referenced:
+```c++
+    /* You can do this with '&someObject' too */
+    foo(const myClass *someObject) {
+        // Do something that doesn't modify the object
+    }
+
+```
 * For overloaded constructors, better to make a private init function and call it from the constructors. Reduces redundancy.
 * List built-in headers like `<Arduino.h>` before `"foo.h"`
 * Only `#include` what is strictly needed for the current file. For instance, don't `#include` something in a header just because you think the implementation will require it. If only the implementation needs it, only include it in the implementation.
 * In general, code what you mean. Even though `1000 >> 1` is faster, strictly speaking, than `1000 / 2`, the latter is preferable if you mean to say "1000 divided by 2" and not "1000 arithmetic shift right." The exception is if a particular bit of code is bottlenecking the process and compiler optimization isn't working.
 * To make the control flow more explicit, favor `else` blocks rather than early returns. For example:
 ```c++
-/* THIS IS MISLEADING */
+/* This is misleading */
 int myFunc(bool isFoo) {
     if (isFoo) {
-        do_something();
+        doSomething();
         return 1;
     }
     return 0;
 }
 
 
-/* THIS IS BETTER */
+/* This is probably better */
 int myfunc(bool isFoo) {
     if (isFoo) {
-        do_something
+        doSomething
         return 1;
     else {return 0;}
 }
@@ -157,6 +178,6 @@ int myfunc(bool isFoo) {
 
 /* Ternary operator is pretty fun, but use it sparingly */
 int myFunc(bool isFoo) {
-    return isFoo ? 1 : 0; 
+    return isFoo ? 1 : 0;
 }
 ```
