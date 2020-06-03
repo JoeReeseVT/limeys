@@ -54,7 +54,6 @@ int  baz;     // Comment about baz
  * Multi
  * line
  * comment
- * The final `/` is in column 75
  */
  ```
 
