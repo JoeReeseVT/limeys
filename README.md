@@ -22,17 +22,17 @@ int *myPointer;
 * For things like constructors where it makes sense for parameters to have the same name as data members, do it. Example:
 ```c++
 class myClass {
-	public:
-		myClass(int data);
-	private:
-		int data;
+    public:
+        myClass(int data);
+    private:
+        int data;
 };
 
 
 /* Purpose: Initialize data members in a sane way
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 myClass::myClass(int data) {
-	this->data = data;
+    this->data = data;
 }
 ```
 
@@ -50,8 +50,8 @@ int  baz;    // Comment about baz
 /* Multi
  * line
  * comment
- * The final `/` is in column 79
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ * The final `/` is in column 75
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
  ```
  
  * Function contracts and file headings should follow this template:
@@ -82,28 +82,30 @@ int  baz;    // Comment about baz
 ```
  
 ### Indentation, brackets, and spacing
-* Use tab characters (nominally, tab width of 4) for leading whitespace, except when aligning functions/statements that span multiple lines:
+* Use SPACE characters, not tab, for leading whitespace.
+* If possible, wrap long lines to be visually inside any brackets:
 ```c++
 void myBigLongFunction(unsigned long bigVariableName, 
                        int paramsContinued) {
-	
-	/* Above should all be spaces */
 
-	if (condition1 and condition2 and condition3 or
-	    cond3      and cond4);
+    /* Above should all be spaces */
 
-	/* Above is one tab followed by spaces *
-
+    if (condition1 and condition2 and condition3 or
+        cond3 and cond4);
 }
 ```
 
 * Functions, loops, conditionals, and other curly-brace blocks open on same-line
 * Place `else`s on the same line as previous `if` closing braces
-* Don't use braces for single-statement loops/conditionals
+* DO use braces for single-statement loops/conditionals. You can put the statement in-line if it fits:
+```c++
+    if (condition) {single_statement();}
+    else {foo = some_value;}
+    // etc...
+```
 * Think of bits of code as phrases, sentences, paragraphs, etc. Keep related code close together and don't be afraid of newlines when changing the focus.
-* Group variable declarations by type whenever possible
-* Separate functions and other major blocks by two empty lines. (Only use double-newlines at the global level, not within functions)
-:
+* Group variable declarations by type whenever possible, but make them as separate statements to make future editing faster.
+* Separate functions and other major blocks by two empty lines. (Only use double-newlines at the global level, not within functions):
 ```c++
 #ifndef EXAMPLE_H
 #define EXAMPLE_H
@@ -112,15 +114,15 @@ void myBigLongFunction(unsigned long bigVariableName,
 /* Includes, constants, objects etc are kinda their own thing */
 #include "foo.h"
 
-const int A = 1,
-          B = 2,
-          C = 3;
+const int A = 1;
+const int B = 2;
+const int C = 3;
 
 
 /* Purpose: Example function
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */ 
 void myFunc() {
-	/* STUB */
+    /* STUB */
 }
 
 
@@ -130,29 +132,31 @@ void myFunc() {
 ### Miscellaneous
 * For overloaded constructors, better to make a private init function and call it from the constructors. Reduces redundancy.
 * List built-in headers like `<Arduino.h>` before `"foo.h"`
-* Only `#include` what is strictly needed for the current file. For instance, don't `#include` something in a header just because you think the implementation will require it. If the implementation needs it, include it in the implementation.
-* In general, code what you mean. Even though `1000 >> 1` is faster, strictly speaking, than `1000 / 2`, the latter is preferable if you mean to say "1000 divided by 2" and not "1000 arithmetic shift right."
-* Similarly, don't use early returns to replace `else` blocks. For example:
+* Only `#include` what is strictly needed for the current file. For instance, don't `#include` something in a header just because you think the implementation will require it. If only the implementation needs it, only include it in the implementation.
+* In general, code what you mean. Even though `1000 >> 1` is faster, strictly speaking, than `1000 / 2`, the latter is preferable if you mean to say "1000 divided by 2" and not "1000 arithmetic shift right." The exception is if a particular bit of code is bottlenecking the process and compiler optimization isn't working.
+* To make the control flow more explicit, favor `else` blocks rather than early returns. For example:
 ```c++
 /* THIS IS MISLEADING */
 int myFunc(bool isFoo) {
-	if (isFoo)
-		return 1;
-	return 0;
+    if (isFoo) {
+        do_something();
+        return 1;
+    }
+    return 0;
 }
 
 
 /* THIS IS BETTER */
 int myfunc(bool isFoo) {
-	if (isFoo)
-		return 1;
-	else
-		return 0;
+    if (isFoo) {
+        do_something
+        return 1;
+    else {return 0;}
 }
 
 
-/* Ternary operator is pretty great */
+/* Ternary operator is pretty fun, but use it sparingly */
 int myFunc(bool isFoo) {
-	isFoo ? return 1 : return 0;
+    return isFoo ? 1 : 0; 
 }
 ```
