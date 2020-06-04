@@ -1,6 +1,6 @@
 /*
  *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ */
 
 #ifndef HALLSENSOR_H
 #define HALLSENSOR_H
@@ -11,27 +11,27 @@
 
 /*
  *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ */
 enum hallMode_t {
-  ACTIVE_HIGH,
-  ACTIVE_LOW
+    ACTIVE_HIGH,
+    ACTIVE_LOW
 };
 
 
 class hallSensor {
-  public:
-    hallSensor(int sensorPin, hallMode_t mode);
+    public:
+        hallSensor(int sensorPin, hallMode_t mode);
 
-    void loop();
-    
-    bool detectField();
+        void loop();
 
-    bool getDetected();
-  
-  private:
-    int sensorPin;
-    bool detected;
-    hallMode_t mode;
+        bool detectField();
+
+        bool getDetected();
+
+    private:
+        int sensorPin;
+        bool detected;
+        hallMode_t mode;
 };
 
 

@@ -1,6 +1,6 @@
 /*
  *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ */
 
 #ifndef TESTHALLSENSOR_H
 #define TESTHALLSENSOR_H
@@ -15,15 +15,10 @@ hallSensor hallRight = hallSensor(30, ACTIVE_LOW);
 
 /*
  *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ */
 void testHallSensor() {
-
-  hallRight.loop();
-  
-  if (hallRight.getDetected()) {
-        Serial.println("Found");
-  }
-  
+    hallRight.loop();
+    if (hallRight.getDetected()) {Serial.println("Found");}
 }
 
 
