@@ -24,12 +24,14 @@ extern const float mtrLeftScale;
 extern const float mtrRightScale;
 
 brightSensor lightFollow(brightSensePin, brightSenseLedPin);
-driveControl botDrive(mtrLeftFwdPin, mtrLeftRevPin, mtrLeftScale,
-                      mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
+
+
 /*
  *
  */
 void testBrightSensor() {
+    static driveControl botDrive(mtrLeftFwdPin,  mtrLeftRevPin,  mtrLeftScale,
+                                 mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
     static int state = 0;   
  
     lightFollow.loop();

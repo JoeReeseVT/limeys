@@ -23,5 +23,8 @@ const float mtrRightScale =  1.0;
 /* Path sensing */
 const int pathSensePin = A1;
 
+/* Script selection jumper switch */
+const int selectionPin = A2;
+
 
 #endif

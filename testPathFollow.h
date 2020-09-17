@@ -20,11 +20,11 @@ extern const float mtrLeftScale;
 extern const float mtrRightScale;
 extern const int   mtrSpeed;
 
-driveControl botDrive(mtrLeftFwdPin,  mtrLeftRevPin,  mtrLeftScale,
-                      mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
-
 
 void testPathFollow() {
+    static driveControl botDrive(mtrLeftFwdPin, mtrLeftRevPin, mtrLeftScale,
+                                 mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
+
     static int state = 0;
     static uint32_t timer = MILLIS;
 
@@ -36,9 +36,9 @@ void testPathFollow() {
 
     switch (state) {
 
-        case 0:  // 5s halt
-            botDrive.halt(5000);
-            Serial.println("5s halt...");
+        case 0:  // 1s halt
+            botDrive.halt(1000);
+            Serial.println("1s halt...");
             state = 1;
             break;
 
@@ -81,7 +81,7 @@ void testPathFollow() {
                 botDrive.halt();
                 state = 3;
             } else if (botDrive.getIsIdle()) {
-                botDrive.turnRight(1000, mtrSpeed);
+                botDrive.turnRight(5000, mtrSpeed);
                 Serial.println("Left turn failed, turning right");
                 state = 6;
             }
