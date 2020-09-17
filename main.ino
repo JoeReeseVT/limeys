@@ -42,23 +42,22 @@
  */
 
 #include <Arduino.h>
+#include "config.h"
 #include "globalTimer.h"
 
 extern uint32_t MILLIS;
-
 
 /* For each test you include, add the corresponding test from loop() */
 //#include "testMotor.h"
 //#include "testDrive.h"
 //#include "testPathFollow.h"
-#include "testThermistor.h"
+//#include "testThermistor.h"
 #include "testBrightSensor.h"
 
 
 /* High baud rate -> fast printing, to minimize timing impact */
 void setup() {
-   // Serial.begin(115200);
-    Serial.begin(9600);
+    Serial.begin(115200);
 }
 
 /* Update MILLIS and call any test function(s) */
@@ -68,6 +67,6 @@ void loop() {
     //testMotor();
     //testDrive();
     //testPathFollow();
-    testThermistor();
-    //testBrightSensor();
+    //testThermistor();
+    testBrightSensor();
 }
