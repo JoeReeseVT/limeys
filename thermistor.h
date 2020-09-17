@@ -9,10 +9,10 @@
 
 #include <Arduino.h>
 
-class thermistor{
+class thermistor {
   public:
 
-    thermistor(int sensorPinIn, int outputPinIn);
+    thermistor(int sensorPinIn, int outputPinIn, float thermThreshold);
   
     void init();
     void loop();

@@ -7,22 +7,23 @@
 
 
 #include <Arduino.h>
+#include "config.h"
 #include "brightSensor.h"
 #include "driveControl.h"
 
 extern uint32_t MILLIS;
 
-const int sensorPin  = 7;
-const int ledPin     = 4;
+extern const int brightSensePin;
+extern const int brightSenseLedPin;
 
-const int   mtrLeftFwdPin  = 9;
-const int   mtrLeftRevPin  = 10;
-const int   mtrRightFwdPin = 5;
-const int   mtrRightRevPin = 6;
-const float mtrLeftScale   = 1.0;
-const float mtrRightScale  = 1.0;
+extern const int   mtrLeftFwdPin;
+extern const int   mtrLeftRevPin;
+extern const int   mtrRightFwdPin;
+extern const int   mtrRightRevPin;
+extern const float mtrLeftScale;
+extern const float mtrRightScale;
 
-brightSensor lightFollow(sensorPin, ledPin);
+brightSensor lightFollow(brightSensePin, brightSenseLedPin);
 driveControl botDrive(mtrLeftFwdPin, mtrLeftRevPin, mtrLeftScale,
                       mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
 /*
