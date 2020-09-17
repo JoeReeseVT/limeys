@@ -9,13 +9,12 @@
 #include "Arduino.h"
 #include "driveControl.h"
 
-int mtrLeftFwdPin  = 4;
-int mtrLeftRevPin  = 5;
-int mtrRightFwdPin = 2;
-int mtrRightRevPin = 3;
+int mtrLeftFwdPin  = 9;
+int mtrLeftRevPin  = 10;
+int mtrRightFwdPin = 6;
+int mtrRightRevPin = 5;
 
-driveControl botDrive(mtrLeftFwdPin, mtrLeftRevPin,
-                      mtrRightFwdPin, mtrRightRevPin);
+driveControl botDrive(mtrLeftFwdPin, mtrLeftRevPin, 0, mtrRightFwdPin, mtrRightRevPin, 0);
 
 /*
  *
@@ -28,67 +27,67 @@ void testDrive() {
     switch (testNum) {
         /* Straight FWD */
         case 0:
-            if (not botDrive.getIsMoving()) {
+            if (botDrive.getIsIdle()) {
                 Serial.println("Switching to 1");
-                botDrive.stop(500);
+                botDrive.halt(5000);
                 testNum++;
             }
             break;
 
         /* Straight back */
         case 1:
-            if (not botDrive.getIsMoving()) {
+            if (botDrive.getIsIdle()) {
                 Serial.println("Switching to 2");
-                botDrive.reverse(1000, 70);
+                botDrive.reverse(10000, 70);
                 testNum++;
             }
             break;
 
         case 2:
-            if (not botDrive.getIsMoving()) {
+            if (botDrive.getIsIdle()) {
                 Serial.println("Switching to 3");
-                botDrive.stop(500);
+                botDrive.halt(5000);
                 testNum++;
             }
             break;
 
         /* Turn left */
         case 3:
-            if (not botDrive.getIsMoving()) {
+            if (botDrive.getIsIdle()) {
                 Serial.println("Switching to 4");
-                botDrive.turnLeft(1000, 70);
+                botDrive.turnLeft(10000, 70);
                 testNum++;
             }
             break;
 
         case 4:
-            if (not botDrive.getIsMoving()) {
+            if (botDrive.getIsIdle()) {
                 Serial.println("Switching to 5");
-                botDrive.stop(500);
+                botDrive.halt(5000);
                 testNum++;
             }
             break;
 
         /* Turn right */
         case 5:
-            if (not botDrive.getIsMoving()) {
+            if (botDrive.getIsIdle()) {
                 Serial.println("Switching to 6");
-                botDrive.turnRight(1000, 70);
+                botDrive.turnRight(10000, 70);
                 testNum++;
             }
             break;
 
         case 6:
-            if (not botDrive.getIsMoving()) {
+            if (botDrive.getIsIdle()) {
                 Serial.println("Switching to 7");
-                botDrive.stop(500);
+                botDrive.halt(5000);
                 testNum++;
             }
             break;
         case 7:
-            if (not botDrive.getIsMoving()) {
+            if (botDrive.getIsIdle()) {
                 Serial.println("Switching to 0");
-                botDrive.forward(1000, 70);
+                botDrive.forward(10000, 70);
                 testNum = 0;
             }
     }  // switch

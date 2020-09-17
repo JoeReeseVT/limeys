@@ -33,8 +33,8 @@ extern uint32_t MILLIS;
 driveControl::driveControl(int   mtrLeftFwdPin,  int   mtrLeftRevPin,
                            float scaleLeft,      int   mtrRightFwdPin,
                            int   mtrRightRevPin, float scaleRight)
-    : motorLeft(mtrLeftFwdPin, mtrLeftRevPin, scaleLeft),
-      motorRight(mtrRightFwdPin, mtrRightRevPin, scaleRight) {
+    : motorLeft(mtrLeftFwdPin, mtrLeftRevPin),
+      motorRight(mtrRightFwdPin, mtrRightRevPin) {
 
     isIdle     = true;
     duration   = 0;
@@ -58,7 +58,7 @@ void driveControl::loop() {
     motorLeft.loop();
     motorRight.loop();
 
-    if (not isIdle and MILLIS - timer >= duration) {halt();}
+    if ((not isIdle) and (MILLIS - timer >= duration)) {halt();}
 }
 
 

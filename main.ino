@@ -50,7 +50,8 @@ extern uint32_t MILLIS;
 /* For each test you include, add the corresponding test from loop() */
 //#include "testMotor.h"
 //#include "testDrive.h"
-#include "testPathFollow.h"
+//#include "testPathFollow.h"
+#include "testBrightSensor.h"
 
 
 /* High baud rate -> fast printing, to minimize timing impact */
@@ -64,5 +65,6 @@ void loop() {
 
     //testMotor();
     //testDrive();
-    testPathFollow();
+    //testPathFollow();
+    testBrightSensor();
 }

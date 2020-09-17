@@ -12,10 +12,10 @@
 extern uint32_t MILLIS;
 
 
-const int mtrLeftFwdPin  = 4;
-const int mtrLeftRevPin  = 5;
-const int mtrRightFwdPin = 2;
-const int mtrRightRevPin = 3;
+const int mtrLeftFwdPin  = 9;
+const int mtrLeftRevPin  = 10;
+const int mtrRightFwdPin = 6;
+const int mtrRightRevPin = 5;
 
 motorControl leftMotor(mtrLeftFwdPin,   mtrLeftRevPin);
 motorControl rightMotor(mtrRightFwdPin, mtrRightRevPin);
