@@ -60,7 +60,6 @@ void driveControl::loop() {
 
     if (not isIdle and MILLIS - timer >= duration) {
         halt();
-        isIdle = true;
     }
 }
 
