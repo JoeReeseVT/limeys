@@ -9,12 +9,12 @@
 #include "Arduino.h"
 #include "driveControl.h"
 
-int mtrLeftFwdPin  = 9;
-int mtrLeftRevPin  = 10;
-float mtrLeftScale = 1.0;
-int mtrRightFwdPin = 5;
-int mtrRightRevPin = 6;
-float mtrRightScale = 1.0;
+const int   mtrLeftFwdPin  = 9;
+const int   mtrLeftRevPin  = 10;
+const int   mtrRightFwdPin = 5;
+const int   mtrRightRevPin = 6;
+const float mtrLeftScale   = 1.0;
+const float mtrRightScale  = 1.0;
 
 driveControl botDrive(mtrLeftFwdPin, mtrLeftRevPin, mtrLeftScale,
                       mtrRightFwdPin, mtrRightRevPin, mtrRightScale);

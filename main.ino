@@ -51,7 +51,8 @@ extern uint32_t MILLIS;
 //#include "testMotor.h"
 //#include "testDrive.h"
 //#include "testPathFollow.h"
-#include "testThermistor.h"
+//#include "testThermistor.h"
+#include "testBrightSensor.h"
 
 
 /* High baud rate -> fast printing, to minimize timing impact */
@@ -66,5 +67,6 @@ void loop() {
     //testMotor();
     //testDrive();
     //testPathFollow();
-    testThermistor();
+    //testThermistor();
+    testBrightSensor();
 }
