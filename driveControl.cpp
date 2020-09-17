@@ -58,7 +58,10 @@ void driveControl::loop() {
     motorLeft.loop();
     motorRight.loop();
 
-    if (not isIdle and MILLIS - timer >= duration) {halt();}
+    if (not isIdle and MILLIS - timer >= duration) {
+        halt();
+        isIdle = true;
+    }
 }
 
 

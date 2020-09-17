@@ -8,23 +8,19 @@
 #include <Arduino.h>
 #include <limits.h>  // for ULONG_MAX
 #include "driveControl.h"
-#include "lightSensor.h"
 
 
-const int   sensorPin      = A0;
-const int   redLedPin      = 12;
-const int   blueLedPin     = 11;
-const int   mtrLeftFwdPin  = 4;
-const int   mtrLeftRevPin  = 5;
-const int   mtrRightFwdPin = 2;
-const int   mtrRightRevPin = 3;
-const float mtrLeftScale   = 1.3;
+const int   sensorPin      = A1;
+const int   mtrLeftFwdPin  = 9;
+const int   mtrLeftRevPin  = 10;
+const int   mtrRightFwdPin = 5;
+const int   mtrRightRevPin = 6;
+const float mtrLeftScale   = 1.0;
 const float mtrRightScale  = 1.0;
+const int   mtrSpeed       = 80;
 
-
-lightSensor  botSense(sensorPin, redLedPin, blueLedPin);
-driveControl botDrive(mtrLeftFwdPin,  mtrLeftRevPin,  1.3,
-                      mtrRightFwdPin, mtrRightRevPin, 1.0);
+driveControl botDrive(mtrLeftFwdPin,  mtrLeftRevPin,  mtrLeftScale,
+                      mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
 
 
 /*
@@ -35,55 +31,81 @@ driveControl botDrive(mtrLeftFwdPin,  mtrLeftRevPin,  1.3,
  * When you hit red, stop
  */
 void testPathFollow() {
-    static int testNum = 0;
+    static int state = 0;
+    static uint32_t timer = MILLIS;
 
     botDrive.loop();
-    botSense.loop();
 
-    switch (testNum) {
+    // We really don't need to check the path that often, every 5 ms is plenty
+    if (MILLIS - timer < 5) { return; }
+    timer = MILLIS;
 
-        case 0:  // 5-second stop
+    switch (state) {
+
+        case 0:  // 5s halt
             botDrive.halt(5000);
-            ++testNum;
+            Serial.println("5s halt...");
+            state = 1;
             break;
 
-        case 1:  // Go forward until you hit blue
-            botDrive.forward(ULONG_MAX, 45);
-            if (botSense.detectTrack() == BLU_TK) {
+        case 1:  // Start going forward...
+            if (botDrive.getIsIdle()) {
+                botDrive.forward(ULONG_MAX, mtrSpeed);
+                Serial.println("Going forward");
+                state = 2;
+            } 
+            break;
+
+        case 2:  // ... until we find the test track
+            if (not digitalRead(sensorPin)) {
                 botDrive.halt();
-                ++testNum;
+                Serial.println("Found black track");
+                state = 3;
             }
             break;
 
-        case 2:  // Turn 90 deg right
-            botDrive.turnRight(1000, 70);
-            ++testNum;
-            break;
-
-        case 3:  // Forward until yellow, then stop
-            botDrive.forward(ULONG_MAX, 45);
-            if (botSense.detectTrack() == YLW_TK) {
-                botDrive.halt();
-                ++testNum;
+        case 3:  // After a brief pause, continue forward again...
+            if (botDrive.getIsIdle()) {
+                botDrive.forward(ULONG_MAX, mtrSpeed);
+                Serial.println("Following track");
+                state = 4;
             }
             break;
 
-        case 4:  // Turn a little right
-            botDrive.turnRight(250, 70);  // DBG TEST THIS!!
-            ++testNum;
-            break;
-
-        case 5:  // Forward till red, then stop FINALLY
-            botDrive.forward(ULONG_MAX, 45);
-            if (botSense.detectTrack() == RED_TK) {
+        case 4:  // ... until we lose the track, in which case we turn to try and find it
+            if (analogRead(sensorPin) >= 400) {
                 botDrive.halt();
-                ++testNum;
+                botDrive.turnLeft(500, mtrSpeed);
+                Serial.println("Lost track, turning left");
+                state = 5;
             }
             break;
 
-        default:
-            {;}  // NULL
+        case 5:  // If we didn't find the track, try turning the other direction; else if we did return to state 3
+            if (analogRead(sensorPin) < 400) {
+                Serial.println("Left turn successful");
+                botDrive.halt();
+                state = 3;
+            } else if (botDrive.getIsIdle()) {
+                botDrive.turnRight(1000, mtrSpeed);
+                Serial.println("Left turn failed, turning right");
+                state = 6;
+            }
             break;
+
+        case 6:  // If we still can't find the track, give up!
+            if (analogRead(sensorPin) < 400) {
+                Serial.println("Right turn successful");
+                botDrive.halt();
+                state = 3;
+            } else if (botDrive.getIsIdle()) {
+                Serial.println("Right turn failed, giving up");
+                state = 7;
+            }
+            break;
+            
+        case 7:
+            {;}
 
     }  // switch
 }
