@@ -7,22 +7,23 @@
 
 
 #include "Arduino.h"
+#include "config.h"
 #include "driveControl.h"
 
-const int   mtrLeftFwdPin  = 9;
-const int   mtrLeftRevPin  = 10;
-const int   mtrRightFwdPin = 5;
-const int   mtrRightRevPin = 6;
-const float mtrLeftScale   = 1.0;
-const float mtrRightScale  = 1.0;
+extern const int   mtrLeftFwdPin;
+extern const int   mtrLeftRevPin;
+extern const int   mtrRightFwdPin;
+extern const int   mtrRightRevPin;
+extern const float mtrLeftScale;
+extern const float mtrRightScale;
 
-driveControl botDrive(mtrLeftFwdPin, mtrLeftRevPin, mtrLeftScale,
-                      mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
 
 /*
  *
  */
 void testDrive() {
+    static driveControl botDrive(mtrLeftFwdPin, mtrLeftRevPin, mtrLeftScale,
+                                 mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
     static int testNum = 0;
 
     botDrive.loop();

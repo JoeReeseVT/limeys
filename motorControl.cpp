@@ -9,13 +9,13 @@
 extern uint32_t MILLIS;
 
 
-/*
- * Constructor sets direction to FWD and speed to 0
- * and sets pin modes.
- */
-motorControl::motorControl(int fwdPin, int revPin) {
-    initMotor(fwdPin, revPin, 1.0);
-}
+///*
+// * Constructor sets direction to FWD and speed to 0
+// * and sets pin modes.
+// */
+//motorControl::motorControl(int fwdPin, int revPin) {
+//    initMotor(fwdPin, revPin, 1.0);
+//}
 
 
 /*

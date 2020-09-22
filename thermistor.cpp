@@ -8,19 +8,20 @@
 
 extern uint32_t MILLIS;
 
-/*
+
+/*  
  *
  */
-thermistor::thermistor(int sensorPinIn, int outputPinIn) {
-    sensorPin = sensorPinIn;
-    outputPin = outputPinIn;
-    thermThreshold = 0.1; // (V)
+thermistor::thermistor(int sensorPin, int outputPin, float thermThreshold) {
+    this->sensorPin = sensorPin;
+    this->outputPin = outputPin;
+    this->thermThreshold = thermThreshold; // (V)
 }
 
 /*
  *
  */
-void thermistor::init(){
+void thermistor::init() {
   pinMode(sensorPin, INPUT_PULLUP);
   pinMode(outputPin, OUTPUT);
 }
@@ -28,12 +29,11 @@ void thermistor::init(){
 /*
  *
  */
-void thermistor::loop(){
-  while(true){
+void thermistor::loop() {
+  while (true) {
     checkCurrentValue();
 
-    if ((currThermVoltage - firstThermVoltage) > thermThreshold)
-    {
+    if ((currThermVoltage - firstThermVoltage) > thermThreshold) {
       digitalWrite(outputPin, HIGH);
     }
   }
@@ -42,7 +42,7 @@ void thermistor::loop(){
 /*
  *
  */
-void thermistor::checkFirstValue(){
+void thermistor::checkFirstValue() {
   currThermValue = analogRead(sensorPin);
   firstThermVoltage = currThermValue * (5.0 / 1023);
 }
