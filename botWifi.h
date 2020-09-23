@@ -12,6 +12,7 @@ class botWifi {
         void POST(String hexIdLocal, String hexIdRemote, String message);
         String GET(String hexIdLocal, String hexIdRemote);
         String parseMessage(String messageReceived);
+        void shutdown();
         
     private:
         const char * ssid;
