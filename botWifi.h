@@ -9,6 +9,9 @@ class botWifi {
     public:
         void setup();
         void printWifiStatus();
+        void POST(String hexIdLocal, String hexIdRemote, String message);
+        String GET(String hexIdLocal, String hexIdRemote);
+        String parseMessage(String messageReceived);
         
     private:
         const char * ssid;

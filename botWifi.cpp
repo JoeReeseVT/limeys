@@ -69,3 +69,44 @@ void botWifi::printWifiStatus() {
   Serial.print(rssi);
   Serial.println(" dBm");
 }
+
+void botWifi::POST(String hexIdLocal, String hexIdRemote, String message){
+  String POSTstring = "";
+  POSTstring = "POST /" + hexIdLocal + "/" + hexIdRemote + " HTTP/1.1";
+
+  client.println(POSTstring);
+  client.println("Host: ee31.ece.tufts.edu");
+  client.println("Content-Type: application/x-www-form-urlencoded");
+  client.print("Content-Length: ");
+  client.println(message.length());
+  client.println();
+  client.println(message);
+  client.println();
+  
+}
+
+String botWifi::GET(String hexIdLocal, String hexIdRemote){
+  String GETstring = "";
+  GETstring = "GET /" + hexIdLocal + "/" + hexIdRemote + " HTTP/1.1";
+  
+  client.println(GETstring);
+  client.println("Host: ee31.ece.tufts.edu");
+  client.println("Content-Type: application/x-www-form-urlencoded");
+
+  static String messageIn = "";
+  // if there are incoming bytes available
+  // from the server, read them and print them:
+  while (client.available()) {
+    char c = client.read();
+    Serial.write(c);
+    messageIn += c;
+  }
+
+  String parsedMessage = parseMessage(messageIn);
+  return parsedMessage;
+}
+
+String botWifi::parseMessage(String messageReceived){
+  //STUB
+  return messageReceived;
+}
