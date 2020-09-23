@@ -14,11 +14,6 @@
    pass = SECRET_PASS;
    server = "ee31.ece.tufts.edu"; //TODO - make not hardcoded for email communications?
 
-  // Initialize the Ethernet client library
-  // with the IP address and port of the server
-  // that you want to connect to (port 80 is default for HTTP):
-  WiFiClient client;
-
   //Initialize status
   int status = WL_IDLE_STATUS;
   

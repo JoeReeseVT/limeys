@@ -3,6 +3,7 @@
 
 
 #include <Arduino.h>
+#include <WiFiNINA.h>
 
 class botWifi {
     public:
@@ -13,6 +14,7 @@ class botWifi {
         const char * ssid;
         const char * pass;
         const char * server;
+        WiFiClient client;
 
 };
 
