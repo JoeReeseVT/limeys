@@ -6,10 +6,13 @@
 
 class botWifi {
     public:
-        //STUB
+        void setup();
+        void printWifiStatus();
         
     private:
-        //STUB
+        const char * ssid;
+        const char * pass;
+        const char * server;
 
 };
 
