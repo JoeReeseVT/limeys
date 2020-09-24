@@ -16,6 +16,7 @@
  const String ALEJANDRO = "981C14F46BD0";
  const String JOE = "20ABD7AE9A5E";
 
+ //TODO put in your name!
  const String MyId = MELISSA;
 
  void botWifi::setup() {
@@ -95,7 +96,7 @@ void botWifi::POST(String hexIdLocal, String hexIdRemote, String message){
   
 }
 
-String botWifi::GET(String hexIdLocal, String hexIdRemote){
+void botWifi::GET(String hexIdLocal, String hexIdRemote){
   String GETstring = "";
   GETstring = "GET /" + hexIdLocal + "/" + hexIdRemote + " HTTP/1.1";
   
@@ -103,22 +104,64 @@ String botWifi::GET(String hexIdLocal, String hexIdRemote){
   client.println("Host: ee31.ece.tufts.edu");
   client.println("Content-Type: application/x-www-form-urlencoded");
 
-  static String messageIn = "";
   // if there are incoming bytes available
   // from the server, read them and print them:
   while (client.available()) {
     char c = client.read();
     Serial.write(c);
-    messageIn += c;
+    msgStatus = parseMessage(c);
   }
 
-  String parsedMessage = parseMessage(messageIn);
-  return parsedMessage;
+  msgStatus = parseMessage('\n');
+  if (msgStatus == VLD) {
+        Serial.print("\nThe message is: ");
+        Serial.println(message);
+    } else if (msgStatus == ERR){
+        Serial.print("The error is: ");
+        Serial.println(message);
+    }
+    
 }
 
-String botWifi::parseMessage(String messageReceived){
-  //STUB
-  return messageReceived;
+/*
+ * Takes serial characters as input
+ * Builds out each line and checks for errors
+ * Stores errors and messages in global variable
+ */
+status_t botWifi::parseMessage(char c) {
+    static String readLine;
+    int           loc; 
+    if (c == '\n') {  //looks for end of data packet marker
+        // POST/GET error
+        loc = readLine.indexOf("command"); 
+        if (loc != -1) {
+            message = readLine.substring(loc+8, readLine.length());
+            Serial.print("\nERROR: ");
+            Serial.println(message);
+            return ERR; // returns error occured
+        }
+        // message error
+        loc = readLine.indexOf("message=Error");
+        if (loc != -1) {
+            message = readLine.substring(loc+6, readLine.length());
+            Serial.print("\nERROR: ");
+            Serial.println(message);
+            return ERR; // return error occured
+        }
+        // message success
+        loc = readLine.indexOf("message=Success");
+        if (loc != -1) {
+            message = readLine.substring(loc+15, readLine.length());
+            Serial.print("\nMESSAGE: ");
+            Serial.println(message);
+            return VLD; // returns message success
+        }
+        readLine=""; // clears variable for new input 
+    }  
+    else {     
+      readLine += c; //makes the string readLine
+    }
+    return UNK; // returns data invlalid while building line
 }
 
 void botWifi::shutdown(){

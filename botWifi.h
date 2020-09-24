@@ -5,13 +5,19 @@
 #include <Arduino.h>
 #include <WiFiNINA.h>
 
+enum status_t {
+    ERR, // message holds error
+    VLD, // message holds valid data
+    UNK  // message data is not valid
+};
+
 class botWifi {
     public:
         void setup();
         void printWifiStatus();
         void POST(String hexIdLocal, String hexIdRemote, String message);
-        String GET(String hexIdLocal, String hexIdRemote);
-        String parseMessage(String messageReceived);
+        void GET(String hexIdLocal, String hexIdRemote);
+        status_t parseMessage(char c);
         void shutdown();
         
     private:
@@ -19,7 +25,8 @@ class botWifi {
         const char * pass;
         const char * server;
         WiFiClient client;
-
+        status_t msgStatus;
+        String message;
 };
 
 

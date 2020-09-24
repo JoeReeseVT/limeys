@@ -26,8 +26,9 @@ void testWifi(){
   connection.POST(MELISSA, COLE, "hello");
 
   //test GET
-  String messageReceived = connection.GET(MELISSA, COLE);
-  Serial.println(messageReceived);
+  connection.GET(MELISSA, COLE);
+
+  connection.shutdown();
 }
 
 #endif
