@@ -45,7 +45,6 @@
 #include "globalTimer.h"
 
 extern uint32_t MILLIS;
-extern const int selectionPin;
 
 /* For each test you include, add the corresponding test from loop() */
 #include "testMotor.h"
@@ -57,63 +56,22 @@ extern const int selectionPin;
 #include "testGoBeyond.h"
 #include "goBeyond.h"
 
-void (*scriptFunc)(void) = NULL;
-
 /* High baud rate -> fast printing, to minimize timing impact */
 void setup() {
     Serial.begin(115200);
-
-    int script = analogRead(selectionPin) / 100;
-    
-    Serial.print("Executing Script: ");
-    
-    switch (script) {
-        case 10:
-            Serial.println("testGoBeyond"); 
-            goBeyond connection; 
-            connection.setup(); 
-            scriptFunc = testGoBeyond; 
-            break;
-            
-        case  9:
-            Serial.println("testMotor");
-            scriptFunc = testMotor;
-            break;
-            
-        case 8: 
-        case 7:
-            Serial.println("testDrive");
-            scriptFunc = testDrive;
-            break;
-
-        case 6: 
-        case 5:
-            Serial.println("testPathFollow");
-            scriptFunc = testPathFollow;
-            break;
-
-        case 4:
-        case 3:
-            Serial.println("testThermistor");
-            scriptFunc = testThermistor;
-            break;
-
-        case 2:
-        case 1:
-            Serial.println("testBrightSensor");
-            scriptFunc = testBrightSensor;
-            break;
-
-        case 0:
-        default:
-            Serial.println("<NO TEST>");
-            scriptFunc = NULL;
-    }
+     
+    goBeyond connection; 
+    connection.setup(); 
 }
 
 /* Update MILLIS and call any test function(s) */
 void loop() {
     MILLIS = micros() / 1000;
-     
-    if (scriptFunc != NULL) { scriptFunc(); }
+
+    //testMotor();
+    //testDrive();
+    //testPathFollow();
+    //testThermistor();
+    //testBrightSensor();
+    //testGoBeyond();
 }

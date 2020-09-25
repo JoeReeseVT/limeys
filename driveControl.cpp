@@ -33,7 +33,7 @@ extern uint32_t MILLIS;
 driveControl::driveControl(int   mtrLeftFwdPin,  int   mtrLeftRevPin,
                            float scaleLeft,      int   mtrRightFwdPin,
                            int   mtrRightRevPin, float scaleRight)
-    : motorLeft(mtrLeftFwdPin,   mtrLeftRevPin,  scaleLeft),
+    : motorLeft(mtrLeftFwdPin, mtrLeftRevPin, scaleLeft),
       motorRight(mtrRightFwdPin, mtrRightRevPin, scaleRight) {
 
     isIdle     = true;

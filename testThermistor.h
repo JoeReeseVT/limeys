@@ -7,15 +7,14 @@
 
 #include <Arduino.h>
 #include <limits.h>  // for ULONG_MAX
-#include "config.h"
 #include "thermistor.h"
 
-extern const int   thermPin;
-extern const int   thermLedPin;
-extern const float thermDefaultThresh;
+const int  sensorPin      = A5;
+const int  outLedPin      = 7;
+
 
 void testThermistor() {
-  thermistor thermObject(thermPin, thermLedPin, thermDefaultThresh);
+  thermistor thermObject(sensorPin, outLedPin);
   
   thermObject.init();
   thermObject.checkFirstValue();
