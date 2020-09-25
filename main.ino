@@ -47,11 +47,11 @@
 extern uint32_t MILLIS;
 
 /* For each test you include, add the corresponding test from loop() */
-#include "testMotor.h"
-#include "testDrive.h"
-#include "testPathFollow.h"
-#include "testThermistor.h"
-#include "testBrightSensor.h"
+//#include "testMotor.h"
+//#include "testDrive.h"
+//#include "testPathFollow.h"
+//#include "testThermistor.h"
+//#include "testBrightSensor.h"
 
 #include "testGoBeyond.h"
 #include "goBeyond.h"
@@ -73,5 +73,5 @@ void loop() {
     //testPathFollow();
     //testThermistor();
     //testBrightSensor();
-    //testGoBeyond();
+    testGoBeyond();
 }
