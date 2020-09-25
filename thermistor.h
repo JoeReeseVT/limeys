@@ -14,10 +14,7 @@ class thermistor {
 
     thermistor(int sensorPinIn, int outputPinIn, float thermThreshold);
   
-    void init();
-    void loop();
-    void checkFirstValue();
-    void checkCurrentValue();
+    bool loop();
 
   private:
 
@@ -25,9 +22,8 @@ class thermistor {
     int outputPin;
     
     int currThermValue;
-    float currThermVoltage;
-    float firstThermVoltage;
-    float thermThreshold;
+    int firstThermValue;
+    int thermThreshold;
   
 };
 

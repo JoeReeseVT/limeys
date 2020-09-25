@@ -21,12 +21,17 @@ extern const float mtrRightScale;
 extern const int   mtrSpeed;
 
 
-void testPathFollow() {
+/*
+ *  Goes through the cases in a set sequence. Once we reach a dead end, 
+ *  state does not change any more, we just return true forever.
+ */
+bool testPathFollow() {
     static driveControl botDrive(mtrLeftFwdPin, mtrLeftRevPin, mtrLeftScale,
                                  mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
 
     static int state = 0;
     static uint32_t timer = MILLIS;
+    static bool isComplete = false;  // Whether we've reached a dead end
 
     botDrive.loop();
 
@@ -99,9 +104,11 @@ void testPathFollow() {
             break;
             
         case 7:
-            {;}
+            isComplete = true;
 
     }  // switch
+
+    return isComplete;
 }
 
 

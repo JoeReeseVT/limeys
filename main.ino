@@ -43,68 +43,91 @@
 
 #include <Arduino.h>
 #include "globalTimer.h"
+#include "config.h"
 
 extern uint32_t MILLIS;
-extern const int selectionPin;
 
-/* For each test you include, add the corresponding test from loop() */
-#include "testMotor.h"
-#include "testDrive.h"
 #include "testPathFollow.h"
-#include "testThermistor.h"
 #include "testBrightSensor.h"
+#include "thermistor.h"
 
-void (*scriptFunc)(void) = NULL;
+
+/*
+ *  Select which bot this is:
+ *      1: Thermistor start, path follow, sends POST message at end of path
+ *      2: Receive BOT_1's message, flashlight tracking, POST at end of path
+ *      3: Receive BOT_2's message, Go Beyond demo
+ */
+#define BOTNUM 1
 
 
 /* High baud rate -> fast printing, to minimize timing impact */
 void setup() {
     Serial.begin(115200);
 
-    int script = analogRead(selectionPin) / 100;
-    Serial.print("Executing Script: ");
+    /* Make sure Serial is started before anything else tries to execute */
+    while (not Serial) {;}
 
-    switch (script) {
-        case 10:
-        case  9:
-            Serial.println("testMotor");
-            scriptFunc = testMotor;
-            break;
+    #if BOTNUM == 1
+    /* Loop until thermistor reaches required temperature */
+    {
+        extern const int thermPin;
+        extern const int thermLedPin;
+        extern const int thermDefaultThresh;
 
-        case 8: 
-        case 7:
-            Serial.println("testDrive");
-            scriptFunc = testDrive;
-            break;
-
-        case 6: 
-        case 5:
-            Serial.println("testPathFollow");
-            scriptFunc = testPathFollow;
-            break;
-
-        case 4:
-        case 3:
-            Serial.println("testThermistor");
-            scriptFunc = testThermistor;
-            break;
-
-        case 2:
-        case 1:
-            Serial.println("testBrightSensor");
-            scriptFunc = testBrightSensor;
-            break;
-
-        case 0:
-        default:
-            Serial.println("<NO TEST>");
-            scriptFunc = NULL;
+        thermistor thermObject(thermPin, thermLedPin, thermDefaultThresh);
+        while (not thermObject.loop()) {;}
     }
-}
+
+    #elif BOTNUM == 2
+    /* Set up wifi */
+    // STUB
+
+    /* Loop until we receive the correct message from BOT 1 */
+    // STUB
+
+    #elif BOTNUM == 3
+    /* Set up wifi */
+    // STUB
+
+    /* Loop until we receive the correct message from BOT 2 */
+    // STUB
+
+    #endif
+} 
 
 /* Update MILLIS and call any test function(s) */
 void loop() {
     MILLIS = micros() / 1000;
 
-    if (scriptFunc != NULL) { scriptFunc(); }
+    static int state = 0;
+
+    switch (state) {
+
+        #if BOTNUM == 1
+        case 0:
+            if (testPathFollow()) { state = 1; }
+            break;
+        case 1:
+            // STUB: SEND POST FOR COLE/MELISSA TO PICK UP
+            break;
+
+        #elif BOTNUM == 2
+        case 0:
+            if (testBrightSensor()) { state = 1; }
+            break;
+        case 1:
+            // STUB: SEND POST FOR MELVIN/ALE
+            break;
+
+        #elif BOTNUM == 3
+        case 0:
+            testGoBeyond();
+            break;
+
+        #endif
+
+        default:
+            {;}
+    }
 }
