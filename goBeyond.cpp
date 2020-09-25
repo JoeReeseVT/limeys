@@ -9,6 +9,7 @@
 extern const int   mtrLeftFwdPin;
 extern const int   mtrLeftRevPin;
 extern const int   mtrRightFwdPin;
+extern const int   mtrRightRevPin;
 
 // Auxiliary variables to store the current output state
 String mtrLeftFwdState = "off";
@@ -82,23 +83,23 @@ void goBeyond::adjustAction(String header) {
 
 void goBeyond::disableAction(String header) {
   if (header.indexOf("GET /Forward/") >= 0) {
-    Serial.println("GPIO 9 and 5 off");
-    fwdState = "off";
-    digitalWrite(mtrLeftFwdPin, LOW);
-    digitalWrite(mtrRightFwdPin, LOW); 
-  } else if (header.indexOf("GET /LeftTurn/") >= 0) {
     Serial.println("GPIO 10 and 5 off");
-    leftState = "off";
+    fwdState = "off";
     digitalWrite(mtrLeftRevPin, LOW);
     digitalWrite(mtrRightFwdPin, LOW); 
-  } else if (header.indexOf("GET /RightTurn/") >= 0) {
+  } else if (header.indexOf("GET /LeftTurn/") >= 0) {
+    Serial.println("GPIO 9 and 5 off");
+    leftState = "off";
+    digitalWrite(mtrLeftFwdPin, LOW);
+    digitalWrite(mtrRightFwdPin, LOW);
+  } else if (header.indexOf("GET /Reverse/") >= 0) {
     Serial.println("GPIO 9 and 6 off");
-    rightState = "off";
+    revState = "off";
     digitalWrite(mtrLeftFwdPin, LOW);
     digitalWrite(mtrRightRevPin, LOW);
-  } else if (header.indexOf("GET /Reverse/") >= 0) {  //Backwards
+  } else if (header.indexOf("GET /RightTurn/") >= 0) {  //Backwards
     Serial.println("GPIO 10 and 6 on");
-    revState = "off";
+    rightState = "off";
     digitalWrite(mtrLeftRevPin, LOW);
     digitalWrite(mtrRightRevPin, LOW);
   }
@@ -106,23 +107,23 @@ void goBeyond::disableAction(String header) {
 
 void goBeyond::enableAction(String header) {
   if (header.indexOf("GET /Forward/") >= 0) {
-    Serial.println("GPIO 9 and 5 on");
-    fwdState = "on";
-    digitalWrite(mtrLeftFwdPin, HIGH);
-    digitalWrite(mtrRightFwdPin, HIGH); 
-  } else if (header.indexOf("GET /LeftTurn/") >= 0) {
     Serial.println("GPIO 10 and 5 off");
-    leftState = "on";
+    fwdState = "on";
     digitalWrite(mtrLeftRevPin, HIGH);
     digitalWrite(mtrRightFwdPin, HIGH); 
-  } else if (header.indexOf("GET /RightTurn/") >= 0) {
+  } else if (header.indexOf("GET /LeftTurn/") >= 0) {
+    Serial.println("GPIO 9 and 5 on");
+    leftState = "on";
+    digitalWrite(mtrLeftFwdPin, HIGH);
+    digitalWrite(mtrRightFwdPin, HIGH);
+  } else if (header.indexOf("GET /Reverse/") >= 0) {
     Serial.println("GPIO 9 and 6 off");
-    rightState = "on";
+    revState = "on";
     digitalWrite(mtrLeftFwdPin, HIGH);
     digitalWrite(mtrRightRevPin, HIGH);
-  } else if (header.indexOf("GET /Reverse/") >= 0) {  //Backwards
+  } else if (header.indexOf("GET /RightTurn/") >= 0) {  //Backwards
     Serial.println("GPIO 10 and 6 on");
-    revState = "on";
+    rightState = "on";
     digitalWrite(mtrLeftRevPin, HIGH);
     digitalWrite(mtrRightRevPin, HIGH);
   }
