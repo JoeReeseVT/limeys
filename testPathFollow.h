@@ -22,17 +22,23 @@ const int   mtrSpeed       = 80;
 driveControl botDrive(mtrLeftFwdPin,  mtrLeftRevPin,  mtrLeftScale,
                       mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
 
-
 /*
- * SCRIPT:
- * Start forward on black
- * When you hit blue, turn about 90 degrees right (about 1 sec)
- * When you hit yellow, turn a little right
- * When you hit red, stop
+ *  Goes through the cases in a set sequence. Once we reach a dead end,
+ *  state does not change any more, we just return true forever.
+ *
+ *  SCRIPT:
+ *  Start forward on black
+ *  When you hit blue, turn about 90 degrees right (about 1 sec)
+ *  When you hit yellow, turn a little right
+ *  When you hit red, stop
  */
-void testPathFollow() {
+bool testPathFollow() {
+    static driveControl botDrive(mtrLeftFwdPin, mtrLeftRevPin, mtrLeftScale,
+                                 mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
+
     static int state = 0;
     static uint32_t timer = MILLIS;
+    static bool isComplete = false;  // Whether we've reached a dead end
 
     botDrive.loop();
 
@@ -53,7 +59,7 @@ void testPathFollow() {
                 botDrive.forward(ULONG_MAX, mtrSpeed);
                 Serial.println("Going forward");
                 state = 2;
-            } 
+            }
             break;
 
         case 2:  // ... until we find the test track
@@ -103,11 +109,13 @@ void testPathFollow() {
                 state = 7;
             }
             break;
-            
+
         case 7:
-            {;}
+            isComplete = true;
 
     }  // switch
+
+    return isComplete;
 }
 
 
