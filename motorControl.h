@@ -38,8 +38,7 @@ enum spin_t {
 
 class motorControl {
     public:
-        /* Instantiating a motor without scaling value is a deprecated feature */
-        //motorControl(int fwdPin, int revPin);
+        motorControl(int fwdPin, int revPin);
         motorControl(int fwdPin, int revPin, float scalar);
 
         void loop();

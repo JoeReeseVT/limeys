@@ -8,9 +8,6 @@
 extern uint32_t MILLIS;
 
 
-/*  
- *
- */
 thermistor::thermistor(int sensorPin, int outputPin, float thermThreshold) {
     this->sensorPin = sensorPin;
     this->outputPin = outputPin;
@@ -22,7 +19,6 @@ thermistor::thermistor(int sensorPin, int outputPin, float thermThreshold) {
     currThermValue = analogRead(sensorPin);
     firstThermValue = currThermValue;
 }
-
 
 /*
  *  Returns true if temperature change is over threshold, else false.
