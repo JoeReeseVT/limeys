@@ -7,24 +7,30 @@
 
 #include <Arduino.h>
 #include <limits.h>  // for ULONG_MAX
-#include "config.h"
 #include "driveControl.h"
 
 
-extern const int   pathSensePin;
-extern const int   mtrLeftFwdPin;
-extern const int   mtrLeftRevPin;
-extern const int   mtrRightFwdPin;
-extern const int   mtrRightRevPin;
-extern const float mtrLeftScale;
-extern const float mtrRightScale;
-extern const int   mtrSpeed;
+const int   sensorPin      = A1;
+const int   mtrLeftFwdPin  = 9;
+const int   mtrLeftRevPin  = 10;
+const int   mtrRightFwdPin = 5;
+const int   mtrRightRevPin = 6;
+const float mtrLeftScale   = 1.0;
+const float mtrRightScale  = 1.0;
+const int   mtrSpeed       = 80;
+
+driveControl botDrive(mtrLeftFwdPin,  mtrLeftRevPin,  mtrLeftScale,
+                      mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
 
 
+/*
+ * SCRIPT:
+ * Start forward on black
+ * When you hit blue, turn about 90 degrees right (about 1 sec)
+ * When you hit yellow, turn a little right
+ * When you hit red, stop
+ */
 void testPathFollow() {
-    static driveControl botDrive(mtrLeftFwdPin, mtrLeftRevPin, mtrLeftScale,
-                                 mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
-
     static int state = 0;
     static uint32_t timer = MILLIS;
 
@@ -36,9 +42,9 @@ void testPathFollow() {
 
     switch (state) {
 
-        case 0:  // 1s halt
-            botDrive.halt(1000);
-            Serial.println("1s halt...");
+        case 0:  // 5s halt
+            botDrive.halt(5000);
+            Serial.println("5s halt...");
             state = 1;
             break;
 
@@ -51,7 +57,7 @@ void testPathFollow() {
             break;
 
         case 2:  // ... until we find the test track
-            if (not digitalRead(pathSensePin)) {
+            if (not digitalRead(sensorPin)) {
                 botDrive.halt();
                 Serial.println("Found black track");
                 state = 3;
@@ -67,7 +73,7 @@ void testPathFollow() {
             break;
 
         case 4:  // ... until we lose the track, in which case we turn to try and find it
-            if (analogRead(pathSensePin) >= 400) {
+            if (analogRead(sensorPin) >= 400) {
                 botDrive.halt();
                 botDrive.turnLeft(500, mtrSpeed);
                 Serial.println("Lost track, turning left");
@@ -76,19 +82,19 @@ void testPathFollow() {
             break;
 
         case 5:  // If we didn't find the track, try turning the other direction; else if we did return to state 3
-            if (analogRead(pathSensePin) < 400) {
+            if (analogRead(sensorPin) < 400) {
                 Serial.println("Left turn successful");
                 botDrive.halt();
                 state = 3;
             } else if (botDrive.getIsIdle()) {
-                botDrive.turnRight(5000, mtrSpeed);
+                botDrive.turnRight(1000, mtrSpeed);
                 Serial.println("Left turn failed, turning right");
                 state = 6;
             }
             break;
 
         case 6:  // If we still can't find the track, give up!
-            if (analogRead(pathSensePin) < 400) {
+            if (analogRead(sensorPin) < 400) {
                 Serial.println("Right turn successful");
                 botDrive.halt();
                 state = 3;

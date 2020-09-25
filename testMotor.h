@@ -7,22 +7,18 @@
 
 
 #include <Arduino.h>
-#include "config.h"
 #include "motorControl.h"
 
 extern uint32_t MILLIS;
 
 
-extern const int   mtrLeftFwdPin;
-extern const int   mtrLeftRevPin;
-extern const int   mtrRightFwdPin;
-extern const int   mtrRightRevPin;
-extern const float mtrLeftScale;
-extern const float mtrRightScale;
+const int mtrLeftFwdPin  = 4;
+const int mtrLeftRevPin  = 5;
+const int mtrRightFwdPin = 2;
+const int mtrRightRevPin = 3;
 
-
-motorControl leftMotor(mtrLeftFwdPin,   mtrLeftRevPin, mtrLeftScale);
-motorControl rightMotor(mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
+motorControl leftMotor(mtrLeftFwdPin,   mtrLeftRevPin);
+motorControl rightMotor(mtrRightFwdPin, mtrRightRevPin);
 
 
 /*
