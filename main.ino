@@ -46,18 +46,22 @@
 
 extern uint32_t MILLIS;
 
-
 /* For each test you include, add the corresponding test from loop() */
-//#include "testMotor.h"
-//#include "testDrive.h"
-//#include "testPathFollow.h"
-//#include "testThermistor.h"
+#include "testMotor.h"
+#include "testDrive.h"
+#include "testPathFollow.h"
+#include "testThermistor.h"
 #include "testBrightSensor.h"
 
+#include "testGoBeyond.h"
+#include "goBeyond.h"
 
 /* High baud rate -> fast printing, to minimize timing impact */
 void setup() {
     Serial.begin(115200);
+     
+    goBeyond connection; 
+    connection.setup(); 
 }
 
 /* Update MILLIS and call any test function(s) */
@@ -68,5 +72,6 @@ void loop() {
     //testDrive();
     //testPathFollow();
     //testThermistor();
-    testBrightSensor();
+    //testBrightSensor();
+    //testGoBeyond();
 }
