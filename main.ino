@@ -54,23 +54,32 @@ extern const int selectionPin;
 #include "testThermistor.h"
 #include "testBrightSensor.h"
 
-void (*scriptFunc)(void) = NULL;
+#include "testGoBeyond.h"
+#include "goBeyond.h"
 
+void (*scriptFunc)(void) = NULL;
 
 /* High baud rate -> fast printing, to minimize timing impact */
 void setup() {
     Serial.begin(115200);
 
     int script = analogRead(selectionPin) / 100;
+    
     Serial.print("Executing Script: ");
-
+    
     switch (script) {
         case 10:
+            Serial.println("testGoBeyond"); 
+            goBeyond connection; 
+            connection.setup(); 
+            scriptFunc = testGoBeyond; 
+            break;
+            
         case  9:
             Serial.println("testMotor");
             scriptFunc = testMotor;
             break;
-
+            
         case 8: 
         case 7:
             Serial.println("testDrive");
@@ -105,6 +114,6 @@ void setup() {
 /* Update MILLIS and call any test function(s) */
 void loop() {
     MILLIS = micros() / 1000;
-
+     
     if (scriptFunc != NULL) { scriptFunc(); }
 }
