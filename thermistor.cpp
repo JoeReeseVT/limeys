@@ -3,7 +3,6 @@
  */
 
 #include <Arduino.h>
-#include <math.h>
 #include "thermistor.h"
 
 extern uint32_t MILLIS;
@@ -15,42 +14,28 @@ extern uint32_t MILLIS;
 thermistor::thermistor(int sensorPin, int outputPin, float thermThreshold) {
     this->sensorPin = sensorPin;
     this->outputPin = outputPin;
-    this->thermThreshold = thermThreshold; // (V)
+    this->thermThreshold = thermThreshold; 
+
+    pinMode(sensorPin, INPUT_PULLUP);
+    pinMode(outputPin, OUTPUT);
+
+    currThermValue = analogRead(sensorPin);
+    firstThermValue = currThermValue;
 }
 
-/*
- *
- */
-void thermistor::init() {
-  pinMode(sensorPin, INPUT_PULLUP);
-  pinMode(outputPin, OUTPUT);
-}
 
 /*
- *
+ *  Returns true if temperature change is over threshold, else false.
  */
-void thermistor::loop() {
-  while (true) {
-    checkCurrentValue();
+bool thermistor::loop() {
+    currThermValue = analogRead(sensorPin);
 
-    if ((currThermVoltage - firstThermVoltage) > thermThreshold) {
-      digitalWrite(outputPin, HIGH);
+    if ((currThermValue - firstThermValue) > thermThreshold) {
+        digitalWrite(outputPin, HIGH);
+        return true;
+    } else {
+        digitalWrite(outputPin, LOW);
+        return false;
     }
-  }
 }
 
-/*
- *
- */
-void thermistor::checkFirstValue() {
-  currThermValue = analogRead(sensorPin);
-  firstThermVoltage = currThermValue * (5.0 / 1023);
-}
-
-/*
- *
- */
-void thermistor::checkCurrentValue(){
-  currThermValue = analogRead(sensorPin);
-  currThermVoltage = currThermValue * (5.0 / 1023); 
-}

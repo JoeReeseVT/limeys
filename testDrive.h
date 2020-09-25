@@ -17,13 +17,13 @@ extern const int   mtrRightRevPin;
 extern const float mtrLeftScale;
 extern const float mtrRightScale;
 
-driveControl botDrive(mtrLeftFwdPin, mtrLeftRevPin, mtrLeftScale,
-                      mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
 
 /*
  *
  */
 void testDrive() {
+    static driveControl botDrive(mtrLeftFwdPin, mtrLeftRevPin, mtrLeftScale,
+                                 mtrRightFwdPin, mtrRightRevPin, mtrRightScale);
     static int testNum = 0;
 
     botDrive.loop();

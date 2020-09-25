@@ -3,9 +3,9 @@
 
 
 /* Thermistor module */
-const int   thermPin           = A0;
-const int   thermLedPin        =  2;
-const float thermDefaultThresh =  0.1; // (V)
+const int thermPin           = A0;
+const int thermLedPin        =  2;
+const int thermDefaultThresh = 20;  // Expected delta in analogRead value
 
 /* Light sensing module */
 const int brightSensePin    =  7;
