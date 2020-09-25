@@ -42,14 +42,19 @@
  */
 
 #include <Arduino.h>
+#include "config.h"
 #include "globalTimer.h"
 #include "config.h"
 
 extern uint32_t MILLIS;
 
 #include "testPathFollow.h"
-#include "testBrightSensor.h"
-#include "thermistor.h"
+/* For each test you include, add the corresponding test from loop() */
+//#include "testMotor.h"
+//#include "testDrive.h"
+//#include "testPathFollow.h"
+//#include "testThermistor.h"
+
 
 
 /*
@@ -59,7 +64,6 @@ extern uint32_t MILLIS;
  *      3: Receive BOT_2's message, Go Beyond demo
  */
 #define BOTNUM 1
-
 
 /* High baud rate -> fast printing, to minimize timing impact */
 void setup() {
@@ -95,6 +99,7 @@ void setup() {
 
     #endif
 } 
+
 
 /* Update MILLIS and call any test function(s) */
 void loop() {
